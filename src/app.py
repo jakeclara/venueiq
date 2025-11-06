@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html
 from flask import Flask
-from partials import navbar, footer
+from partials import navbar, footer, month_year_filters
 
 # explicit Flask server
 server = Flask(__name__)
@@ -22,7 +22,8 @@ def serve_layout():
     return html.Div(
         [
             navbar,
-            dbc.Container(dash.page_container),
+            dbc.Container(month_year_filters, className="mt-4"),
+            dbc.Container(dash.page_container, className="mt-4"),
             footer
         ],
         className="d-flex flex-column min-vh-100"

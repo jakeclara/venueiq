@@ -31,8 +31,8 @@ navbar = dbc.Navbar(
                         ),
                         dbc.DropdownMenu(
                             children=[
-                                dbc.DropdownMenuItem("Snapshot", href="#"),
-                                dbc.DropdownMenuItem("Statement", href="#"),
+                                dbc.DropdownMenuItem("Snapshot", href="/restaurant/snapshot"),
+                                dbc.DropdownMenuItem("Statement", href="/restaurant/statement"),
                             ],
                             nav=True,
                             in_navbar=True,
@@ -41,13 +41,13 @@ navbar = dbc.Navbar(
                         dbc.NavItem(
                             dbc.NavLink(
                                 "Banquet",
-                                href='/'
+                                href='/banquet'
                             )
                         ),
                         dbc.NavItem(
                             dbc.NavLink(
                                 "Budget",
-                                href='/'
+                                href='/budget'
                             )
                         ),
                     ]
