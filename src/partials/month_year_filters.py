@@ -1,8 +1,10 @@
+# month/year dropdowns for filtering charts (Bootsrap card component)
+
 import dash_bootstrap_components as dbc
 from dash import dcc
 from utils.constants import MONTHS, YEARS
 
-
+# row containing the Month and Year dropdowns
 filter_dropdowns = dbc.Row(
         [
             dbc.Col(
@@ -27,11 +29,13 @@ filter_dropdowns = dbc.Row(
         className="g-3"
     )
 
+# card content: header + dropdowns
 card_content = [
     dbc.CardHeader("Select a period"),
     dbc.CardBody(filter_dropdowns)
 ]
 
+# full component: responsive Card inside a Row/Col wrapper
 month_year_filters = dbc.Row(
         dbc.Col(
             dbc.Card(card_content, color="light", outline=True),

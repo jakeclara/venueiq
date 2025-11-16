@@ -1,13 +1,15 @@
-# Adapted from: https://www.dash-bootstrap-components.com/docs/components/navbar/
+# shared navbar component for pages
+# adapted from: https://www.dash-bootstrap-components.com/docs/components/navbar/
 
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, html
 
+# main navbar component
 navbar = dbc.Navbar(
     dbc.Container(
         [
             html.A(
-                # Use row and col to control vertical alignment of logo / brand
+                # logo and brand, vertically centered
                 dbc.Row(
                     [
                         dbc.Col(html.I(className="bi bi-graph-up custom-navbar-icon")),
@@ -19,7 +21,9 @@ navbar = dbc.Navbar(
                 href="/",
                 className="custom-navbar-link"
             ),
+            # navbar toggler for small screens
             dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
+            # collapsible nav items
             dbc.Collapse(
                 dbc.Nav (
                     [

@@ -1,3 +1,5 @@
+# budget page: table view of combined (restaurant and banquet) venue budget (P&L-style)
+
 import dash
 from dash import html
 import dash_bootstrap_components as dbc

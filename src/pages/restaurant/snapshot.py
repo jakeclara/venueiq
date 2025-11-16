@@ -1,8 +1,10 @@
+# restaurant snapshot page: an at-a-glance view of restaurant KPIs and metrics
+
 import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__)
+dash.register_page(__name__, title="Restaurant Snapshot")
 
 # define chart divs to hold callback otput
 restaurant_mtd_summary_bar_chart = html.Div("Bar chart with MTD Actual, Monthly Budget, PY Actual", id="restaurant-mtd-summary-bar-chart")
