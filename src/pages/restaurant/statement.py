@@ -1,8 +1,10 @@
+# restaurant statement page: table view of restaurant financials (P&L-style)
+
 import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__)
+dash.register_page(__name__, title="Restaurant Statement")
 
 # define chart divs to hold callback otput
 restaurant_statement_table = html.Div("Table to display restaurant financials similar to P&L", id="restaurant-statement-table")

@@ -1,8 +1,11 @@
+# home page: an at-a-glance view of combined (restaurant and banquet) venue KPIs and metrics
+
 import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, path='/')
+# set path to '/' otherwise would auto to '/home'
+dash.register_page(__name__, path='/', title="VenueIQ Main Dashboard")
 
 # define chart divs to hold callback otput
 mtd_revenue_progress_chart = html.Div("Percentage of Budget", id="mtd-revenue-progress-chart")
