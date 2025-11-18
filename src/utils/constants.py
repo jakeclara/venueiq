@@ -23,3 +23,6 @@ EVENT_TYPES = [
     "Holiday Party",
     "Other"
 ]
+
+# menu item types for menu item model
+MENU_CATEGORIES = ["Food", "Beverage"]
