@@ -2,54 +2,51 @@
 
 from mongoengine import connect
 import os
-from dotenv import load_dotenv
 
-def validate_env_vars(*variables):
-    ''' validates that environment variables exist '''
+def validate_env_vars(*variables: str) -> bool:
+    """
+    Validate that all specified environment variables exist.
+
+    Args:
+        *variables (str): One or more environment variable names to check.
+
+    Returns:
+        bool: True if all variables exist, False if any are missing.
+    """
     for var in variables:
-        # if variable does not exist
         if not os.getenv(var):
-                # return false
-                return False
-    
-    # return true only if all variables exist
+            return False
     return True
 
 
-# load environment variables
-load_dotenv()
+def init_db() -> bool:
+    """
+    Connect to the MongoDB database using environment variables.
 
-def init_db():
-    ''' connects to database '''      
+    Assumes that the required environment variables have already 
+    been loaded.
 
-    # if environment variables are NOT available
+    Returns:
+        bool: True if the connection was successful, False otherwise.
+    """      
+
     if not validate_env_vars("MONGO_USER", "MONGO_PASSWORD", "MONGO_HOST", "MONGO_DB"):
         # TODO: remove this debug print statement
         print("Environment variable missing")
-        # false indicates unsuccessful connection
         return False
     
-    # get user and pass
     user = os.getenv("MONGO_USER")
     password = os.getenv("MONGO_PASSWORD")
-
-    # get connection variables
     host = os.getenv("MONGO_HOST")
     db = os.getenv("MONGO_DB")
-
-    # build connection string
     uri = f"mongodb+srv://{user}:{password}@{host}/{db}?retryWrites=true&w=majority"
 
-    # try to connect to db
     try:
-        # use MongoEngine connect method
         connect(host=uri)
         # TODO: remove this debug print statement
         print("Connection successful...")
-        # true indicates successful connection
         return True
     except Exception as e:
         # TODO: remove this debug print statement
         print(f"Connection failed: {e}")
-        # false indicates unsuccessful connection
         return False

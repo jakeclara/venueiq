@@ -1,7 +1,7 @@
 # restaurant sale model: MongoEngine document for itemized restaurant sales
 
 from mongoengine import *
-from models import MenuItem
+from src.models.menu_item import MenuItem
 from datetime import date
 
 class RestaurantSale(Document):
