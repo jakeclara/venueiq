@@ -1,7 +1,7 @@
 # menu item model: MongoEngine document for menu item details
 
 from mongoengine import *
-from utils.constants import MENU_CATEGORIES
+from src.utils.constants import MENU_CATEGORIES
 
 class MenuItem(Document):
     # menu item details

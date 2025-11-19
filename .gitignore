@@ -16,6 +16,7 @@ venv/
 
 # Environment variables
 .env
+.env.seed
 
 # Jupyter Notebook related files
 .ipynb_checkpoints/

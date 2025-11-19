@@ -1,7 +1,7 @@
 # event model: MongoEngine document for event details, financials, and computed fields
 
 from mongoengine import *
-from utils.constants import EVENT_TYPES
+from src.utils.constants import EVENT_TYPES
 
 class Event(Document):
     # event info and financials

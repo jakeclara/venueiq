@@ -2,7 +2,7 @@
 
 import dash_bootstrap_components as dbc
 from dash import dcc
-from utils.constants import MONTHS, YEARS
+from src.utils.constants import MONTHS, YEARS
 
 # row containing the Month and Year dropdowns
 filter_dropdowns = dbc.Row(
