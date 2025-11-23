@@ -24,9 +24,9 @@ class Budget(Document):
 
     # auto compute totals and gross profit before saving
     def save(self, *args, **kwargs):
-        self.total_sales = self.food_sales + self.bev_sales + self.event_sales
-        self.total_cost = self.food_cost + self.bev_cost + self.event_cost
-        self.gross_profit = self.total_sales - self.total_cost
+        self.total_sales = round(self.food_sales + self.bev_sales + self.event_sales, 2)
+        self.total_cost = round(self.food_cost + self.bev_cost + self.event_cost, 2)
+        self.gross_profit = round(self.total_sales - self.total_cost, 2)
         return super().save(*args, **kwargs)
 
     meta = {

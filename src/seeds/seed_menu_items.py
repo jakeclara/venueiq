@@ -1,11 +1,7 @@
 # adds menu items to the database
 
-from dotenv import load_dotenv
-from src.services.db_service import init_db
 from src.models.menu_item import MenuItem
 
-# load environment variables for init_db()
-load_dotenv(".env.seed")
 
 def seed_menu_items() -> int:
     """
@@ -61,11 +57,3 @@ def seed_menu_items() -> int:
         num_items_processed += 1
     
     return num_items_processed
-
-
-if __name__ == "__main__":
-    if init_db():
-        result = seed_menu_items()
-        print(f"{result} Menu Items seeded.")
-    else:
-        print("DB connection failed.")
