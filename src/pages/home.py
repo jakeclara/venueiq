@@ -8,7 +8,7 @@ import dash_bootstrap_components as dbc
 dash.register_page(__name__, path='/', title="VenueIQ Main Dashboard")
 
 # define chart divs to hold callback otput
-mtd_revenue_progress_chart = html.Div("Percentage of Budget", id="mtd-revenue-progress-chart")
+monthly_revenue_progress_chart = html.Div("Percentage of Budget", id="monthly-revenue-progress-chart")
 line_chart_ytd =  html.Div("Line chart for YTD figures", id="line-chart-ytd")
 home_mtd_summary_card =  html.Div("Text or small card with MTD Actual, Monthly Budget, Variance to budget, PY Actual", id="home-mtd-summary-card")
 home_mtd_summary_bar_chart = html.Div("Bar chart with MTD Actual, Monthly Budget, PY Actual", id="home-mtd-summary-bar-chart")
@@ -20,7 +20,7 @@ layout = html.Div([
     html.H1('This is our Home page'),
     html.Div('This is our Home page content.'),
     
-    dbc.Row([dbc.Col(mtd_revenue_progress_chart), dbc.Col(line_chart_ytd)],
+    dbc.Row([dbc.Col(monthly_revenue_progress_chart), dbc.Col(line_chart_ytd)],
             className="mb-2",
             id="home-row-1"),
 

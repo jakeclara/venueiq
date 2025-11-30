@@ -21,6 +21,7 @@ class RestaurantSale(Document):
     
     meta = {
     'ordering': ['-sales_date'],
-    'indexes': ['sales_date', 'item', '-total_sales', '-total_cost']
+    'indexes': ['sales_date', 'item', '-total_sales', '-total_cost'],
+    'auto_create_index': False
     }
     

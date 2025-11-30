@@ -31,5 +31,6 @@ class Budget(Document):
 
     meta = {
         'ordering': ['-year', '-month'],
-        'indexes': ['year', 'month']
+        'indexes': ['year', 'month'],
+        'auto_create_index': False
     }

@@ -25,9 +25,10 @@ class Event(Document):
     # compute event name for display without storing in DB
     @property
     def display_name(self):
-        return f"{self.client_name} {self.type}"
+        return f"{self.client_name} {self.event_type}"
     
     meta = {
         'ordering': ['-event_date'],
-        'indexes': ['event_date', 'event_type', '-total_sales', '-total_cost']
+        'indexes': ['event_date', 'event_type', '-total_sales', '-total_cost'],
+        'auto_create_index': False
     }

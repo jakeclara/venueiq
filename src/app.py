@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html
 from flask import Flask
-from partials import navbar, footer, month_year_filters
+from src.partials import navbar, footer, month_year_filters
 
 # explicit Flask server
 server = Flask(__name__)
