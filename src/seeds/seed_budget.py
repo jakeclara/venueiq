@@ -4,6 +4,7 @@ from src.models.budget import Budget
 from src.models.event import Event
 from src.models.restaurant_sale import RestaurantSale
 from src.seeds import seed_constants as sc
+from src.utils.dates import monthly_date_range
 
 
 def apply_variance(base: float, min_pct: float, max_pct: float) -> float:
@@ -21,26 +22,6 @@ def apply_variance(base: float, min_pct: float, max_pct: float) -> float:
     return round(base * random.uniform(min_pct, max_pct), 2)
 
 
-def date_range(year: int, month: int) -> tuple[date, date]:
-    """
-    Generates the start and end dates for a given year and month.
-
-    Args:
-        year (int): The calendar year.
-        month (int): The calendar month (1-12).
-
-    Returns:
-        tuple[date, date]: A tuple containing the first day of the month
-        and the first day of the following month.
-    """
-    start = date(year, month, 1)
-    if month == 12:
-        end = date(year + 1, 1, 1)
-    else:
-        end = date(year, month + 1, 1)
-    return start, end
-
-
 def get_restaurant_data(year: int, month: int) -> list:
     """
     Aggregates restaurant sales and cost totals grouped by category for a given month.
@@ -53,7 +34,7 @@ def get_restaurant_data(year: int, month: int) -> list:
         list: A list of aggregation results, where each item contains the
         category, total sales, and total cost for that category.
     """
-    start_date, end_date = date_range(year, month)
+    start_date, end_date = monthly_date_range(year, month)
 
     restaurant_data = RestaurantSale.objects(
         sales_date__gte=start_date,
@@ -84,7 +65,7 @@ def get_event_data(year: int, month: int) -> list:
         list: A list containing a single aggregation result with
         total sales and total cost for all events in the month.
     """
-    start_date, end_date = date_range(year, month)
+    start_date, end_date = monthly_date_range(year, month)
 
     event_data = Event.objects(
         event_date__gte=start_date,
