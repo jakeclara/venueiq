@@ -1,46 +1,22 @@
 # data service for restaurant-related operations
-from typing import Any, Dict, Optional, Type
-from xml.dom.minidom import Document
-from src.models.menu_item import MenuItem
+
 from src.models.restaurant_sale import RestaurantSale
+from src.services.helpers import get_total_field
 from datetime import datetime
-
-from src.services.db_service import init_db
-from dotenv import load_dotenv
-import pprint
-
-load_dotenv(".env")
 
 def get_total_restaurant_sales(start_date: datetime, end_date: datetime) -> float:
     """
-    Computes the total restaurant revenue within a given date range
+    Retrieves the total restaurant sales within a given date range.
 
     Args:
         start_date (datetime): The start date of the date range.
         end_date (datetime): The end date of the date range.
 
     Returns:
-        float: The total restaurant revenue within the given date range.
+        float: The total restaurant sales within the given date range.
+
     """
-    pipeline = [
-        {
-            '$match': {
-                'sales_date': {
-                    '$gte': start_date,
-                    '$lt': end_date
-                }
-            }
-        },
-        {
-            '$group': {
-                '_id': None,
-                'total_sales': {'$sum': '$total_sales'}
-            }
-        }
-    ]
-    result = RestaurantSale.objects.aggregate(*pipeline)
-    total_sales = next(result, {}).get('total_sales', 0.0)
-    return total_sales
+    return get_total_field(RestaurantSale, 'total_sales', start_date, end_date, 'sales_date')
 
 
 def get_top_selling_menu_items(start_date: datetime, end_date: datetime, limit: int = 1) -> list[dict]:
@@ -127,13 +103,62 @@ def get_restaurant_sales_by_category(start_date: datetime, end_date: datetime) -
     return list(result)
 
 
-def get_hot_or_cold_menu_items(current_start: datetime, 
-                       current_end: datetime, 
-                       previous_start: datetime, 
-                       previous_end: datetime, 
-                       limit: int = 3,
-                       sort_by_ascending: bool = False
-                       )-> list[dict]:
+def get_restaurant_cost_by_category(start_date: datetime, end_date: datetime) -> list[dict]:
+    """
+    Retrieves the total restaurant cost grouped by category within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        list[dict]: A list of dictionaries containing the category and total cost for each category.
+    """
+    pipeline = [
+        {
+            '$match': {
+                'sales_date': {
+                    '$gte': start_date,
+                    '$lt': end_date
+                }
+            }
+        },
+        {
+            '$group': {
+                '_id': '$category',
+                'total_cost': {'$sum': '$total_cost'}
+            }
+        }
+    ]
+    result = RestaurantSale.objects.aggregate(*pipeline)
+    return list(result)
+
+
+def get_restaurant_gross_profit(start_date: datetime, end_date: datetime) -> float:
+    """
+    Retrieves the total gross profit for restaurant sales within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        float: The total gross profit for restaurant sales within the given date range.
+    """
+    total_sales = get_total_field(RestaurantSale, 'total_sales', start_date, end_date, 'sales_date')
+    total_cost = get_total_field(RestaurantSale, 'total_cost', start_date, end_date, 'sales_date')
+    gross_profit = total_sales - total_cost
+    return gross_profit
+
+
+def get_hot_or_cold_menu_items(
+    current_start: datetime, 
+    current_end: datetime, 
+    previous_start: datetime, 
+    previous_end: datetime, 
+    limit: int = 3,
+    sort_by_ascending: bool = False
+)-> list[dict]:
     """
     Retrieves a list of menu items that are currently hot (or cold) compared to the previous time period.
 
@@ -280,26 +305,3 @@ def get_hot_or_cold_menu_items(current_start: datetime,
     ]
     result = RestaurantSale.objects.aggregate(*pipeline)
     return list(result)
-
-
-
-if __name__ == "__main__":
-    if init_db():
-        start = datetime(2024, 2, 1)
-        end = datetime(2024, 3, 1)
-        previous_start = datetime(2024, 1, 1)
-        previous_end = datetime(2024, 2, 1)
-
-        result = get_total_restaurant_sales(start, end)
-        if result:
-            print(f"Total Restaurant Sales from {start.date()} to {end.date()}: ${result:,.2f}")
-        else:
-            print("No restaurant sales found in the given date range.")
-        print(get_top_selling_menu_items(start, end, 3))
-        print(get_restaurant_sales_by_category(start, end))
-        print("Hot Menu Items:")
-        hot = get_hot_or_cold_menu_items(start, end, previous_start, previous_end, 3, True)
-        print(hot)
-        
-    else:
-        print("DB connection failed.")
