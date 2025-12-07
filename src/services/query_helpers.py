@@ -51,20 +51,3 @@ def get_total_field(
     # execute the aggregation and return the result
     result = model.objects.aggregate(*pipeline)
     return next(result, {}).get('total', 0.0)
-
-
-def compute_cogs_percentage(total_cost: float, total_sales: float) -> float:
-    """
-    Computes the cost of goods sold (COGS) as a percentage from passing total cost and sales values
-
-    Args:
-        total_cost (float): The total cost of goods.
-        total_sales (float): The total sales of goods.
-
-    Returns:
-        float: The COGS as a percentage, rounded to 2 decimal places.
-
-    Notes:
-        If total_sales is 0.0, the function returns 0.0 as the COGS percentage.
-    """
-    return round((total_cost / total_sales) * 100, 2) if total_sales > 0 else 0.0

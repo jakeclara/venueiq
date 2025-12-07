@@ -1,7 +1,7 @@
 # data service for restaurant-related operations
 
 from src.models.restaurant_sale import RestaurantSale
-from src.services.helpers import get_total_field
+from src.services.query_helpers import get_total_field
 from datetime import datetime
 
 def get_total_restaurant_sales(start_date: datetime, end_date: datetime) -> float:
@@ -17,6 +17,20 @@ def get_total_restaurant_sales(start_date: datetime, end_date: datetime) -> floa
 
     """
     return get_total_field(RestaurantSale, 'total_sales', start_date, end_date, 'sales_date')
+
+
+def get_total_restaurant_costs(start_date: datetime, end_date: datetime) -> float:
+    """
+    Retrieves the total restaurant costs within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        float: The total restaurant costs within the given date range.
+    """
+    return get_total_field(RestaurantSale, 'total_cost', start_date, end_date, 'sales_date')
 
 
 def get_top_selling_menu_items(start_date: datetime, end_date: datetime, limit: int = 1) -> list[dict]:

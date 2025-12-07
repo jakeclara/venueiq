@@ -1,34 +1,69 @@
 # home page: an at-a-glance view of combined (restaurant and banquet) venue KPIs and metrics
 
 import dash
-from dash import html
+from dash import dcc, html
 import dash_bootstrap_components as dbc
+
+from src.components import cards
 
 # set path to '/' otherwise would auto to '/home'
 dash.register_page(__name__, path='/', title="VenueIQ Main Dashboard")
 
-# define chart divs to hold callback otput
-monthly_revenue_progress_chart = html.Div("Percentage of Budget", id="monthly-revenue-progress-chart")
-line_chart_ytd =  html.Div("Line chart for YTD figures", id="line-chart-ytd")
-home_mtd_summary_card =  html.Div("Text or small card with MTD Actual, Monthly Budget, Variance to budget, PY Actual", id="home-mtd-summary-card")
-home_mtd_summary_bar_chart = html.Div("Bar chart with MTD Actual, Monthly Budget, PY Actual", id="home-mtd-summary-bar-chart")
-top_menu_item = html.Div("Top selling menu item", id="top-menu-item")
-top_grossing_event = html.Div("Top grossing event", id="top-grossing-event")
+# define charts and divs to hold callback otput
+monthly_revenue_progress_chart = dcc.Graph(
+    id="monthly-revenue-progress-chart",
+    figure={},
+    style={"height": "var(--chart-height)"}
+)
+monthly_summary_card =  html.Div(id="monthly-summary-card")
+ytd_revenue_card =  html.Div(id="ytd-revenue-card")
+cogs_kpi_card =  html.Div(id="cogs-kpi-card")
+profit_card = html.Div(id="profit-card")
+top_menu_item_card = html.Div(id="top-menu-item-card")
+top_event_card = html.Div(id="top-event-card")
+revenue_breakdown_pie_chart = dcc.Graph(
+    id="revenue-breakdown-pie-chart",
+    figure={},
+    style={"height": "var(--chart-height)"}
+)
 
-# define layout with dbc rows and cols, add divs with visualizations to the columns
+
+# define layout with dbc rows and cols
 layout = html.Div([
-    html.H1('This is our Home page'),
-    html.Div('This is our Home page content.'),
-    
-    dbc.Row([dbc.Col(monthly_revenue_progress_chart), dbc.Col(line_chart_ytd)],
-            className="mb-2",
-            id="home-row-1"),
-
-    dbc.Row([dbc.Col(home_mtd_summary_card),dbc.Col(home_mtd_summary_bar_chart)],
-            className="mb-2",
-            id="home-row-2"),
-
-    dbc.Row([dbc.Col(top_menu_item), dbc.Col(top_grossing_event)],
-            className="mb-2",
-            id="home-row-3")
+    dbc.Row([
+        dbc.Col([
+            cards.make_chart_card(
+                "% of Budgeted Monthly Revenue",
+                monthly_revenue_progress_chart
+            )
+        ], xs=12, md=6, className="mb-4"),
+        dbc.Col([
+            monthly_summary_card
+        ], xs=12, md=6, className="mb-4"),
+    ]),
+    dbc.Row([
+        dbc.Col([
+            ytd_revenue_card
+        ], xs=12, md=4, className="mb-4"),
+        dbc.Col([
+            cogs_kpi_card
+        ], xs=12, md=4, className="mb-4"),
+        dbc.Col([
+            profit_card
+        ], xs=12, md=4, className="mb-4"),
+    ]),
+    dbc.Row([
+        dbc.Col([
+            top_menu_item_card
+        ], xs=12, md=4, className="mb-4"),
+        dbc.Col([
+            top_event_card
+        ], xs=12, md=4, className="mb-4"),
+        dbc.Col([
+            cards.make_chart_card(
+                "Revenue Breakdown",
+                revenue_breakdown_pie_chart
+            )
+        ], xs=12, md=4, className="mb-4"),
+    ]),
 ])

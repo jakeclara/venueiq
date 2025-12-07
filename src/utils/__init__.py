@@ -6,6 +6,7 @@ from .constants import (
     YEARS, 
     EVENT_TYPES, 
     MENU_CATEGORIES,
+    THEME_COLORS,
 )
 
 # date utilities

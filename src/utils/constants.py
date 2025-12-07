@@ -1,5 +1,17 @@
 # shared constants used across the app
 
+# color theme for the app (Bootstrap FLATLY theme)
+THEME_COLORS = {
+    "primary": "#2c3e50",
+    "secondary": "#95a5a6",
+    "success": "#18bc9c",
+    "danger": "#e74c3c",
+    "warning": "#f39c12",
+    "info": "#3498db",
+    "light": "#ecf0f1",
+    "dark": "#7b8a8b",
+}
+
 # month options for dropdown filters
 MONTHS = [
     {"label": month_name, "value": month_number}

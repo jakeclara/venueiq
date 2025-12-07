@@ -3,7 +3,6 @@
 # event model
 from .event import Event
 
-# ------- restaurant models -------
 # menu item
 from .menu_item import MenuItem
 
