@@ -1,3 +1,7 @@
+body {
+    background-color: #ecf0f1;
+}
+
 .navbar-dark {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
@@ -22,4 +26,18 @@
 
 footer {
     color: #fff;
+}
+
+:root {
+    --chart-height: 320px;
+}
+
+@media (max-width: 576px) {
+    :root {
+        --chart-height: 250px;
+    }
+}
+
+.kpi-card {
+    line-height: 2;
 }

@@ -3,15 +3,11 @@
 # db connection
 from .db_service import init_db
 
-# budget-related services
-from .budget import (
-    combined_budget_service,
-    event_budget_service,
-    restaurant_budget_service,
-)
+# budget-related service methods
+from . import budget
 
-# event services
-from .event_service import event_service
+# event services methods
+from . import event_service
 
-# restaurant services
-from .restaurant_service import restaurant_service
+# restaurant service methods
+from . import restaurant_service

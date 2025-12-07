@@ -2,7 +2,7 @@
 
 from src.models.event import Event
 from datetime import datetime
-from src.services.helpers import get_total_field
+from src.services.query_helpers import get_total_field
 
 def get_total_event_sales(start_date: datetime, end_date: datetime) -> float:
     """
@@ -17,6 +17,64 @@ def get_total_event_sales(start_date: datetime, end_date: datetime) -> float:
     """
     return get_total_field(Event, 'total_sales', start_date, end_date, 'event_date')
 
+
+def get_total_event_food_sales(start_date: datetime, end_date: datetime) -> float:
+    """
+    Retrieves the total event food sales within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        float: The total event food sales within the given date range.
+    """
+    return get_total_field(Event, 'food_sales', start_date, end_date, 'event_date')
+
+
+def get_total_event_bev_sales(start_date: datetime, end_date: datetime) -> float:
+    """
+    Retrieves the total event bev sales within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        float: The total event bev sales within the given date range.
+    """
+    return get_total_field(Event, 'bev_sales', start_date, end_date, 'event_date')
+
+
+def get_total_event_costs(start_date: datetime, end_date: datetime) -> float:
+    """
+    Retrieves the total event costs within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        float: The total event costs within the given date range.
+    """
+    return get_total_field(Event, 'total_cost', start_date, end_date, 'event_date')
+
+
+def get_events_gross_profit(start_date: datetime, end_date: datetime) -> float:
+    """
+    Retrieves the total gross profit for event sales within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        float: The total gross profit for event sales within the given date range.
+    """
+    total_sales = get_total_field(Event, 'total_sales', start_date, end_date, 'event_date')
+    total_cost = get_total_field(Event, 'total_cost', start_date, end_date, 'event_date')
+    gross_profit = total_sales - total_cost
+    return gross_profit
 
 
 def get_event_with_highest_sales(start_date: datetime, end_date: datetime, limit: int = 1) -> list[dict]:
