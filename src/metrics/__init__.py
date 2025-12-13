@@ -1,20 +1,16 @@
 # metrics/__init__.py
 
+# budget page metrics
+from . import budget_metrics
+
 # home page metrics
-from .home_metrics import (
-    get_combined_monthly_revenue_metrics,
-    get_combined_ytd_revenue_metrics,
-    get_combined_ytd_cost_metrics,
-    compute_cogs_pct_metrics,
-    compute_gross_profit,
-    get_top_event,
-    get_top_menu_item,
-)
+from . import home_metrics
+
+# banquet page metrics
+from . import event_metrics
+
+# restaurant page metrics (snapshot and statement)
+from . import restaurant
 
 # metrics helpers
-from .metrics_helpers import (
-    format_metric,
-    compute_cogs_percentage,
-    compute_total_revenue,
-    compute_total_costs,
-)
+from . import metrics_helpers

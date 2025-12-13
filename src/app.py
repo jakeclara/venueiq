@@ -2,12 +2,12 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html
 from flask import Flask
-
-from src.partials import navbar, footer, month_year_filters
-from src.services.db_service import init_db
 from dotenv import load_dotenv
-from src.callbacks.home_callbacks import get_home_callbacks
-from src.callbacks.event_callbacks import get_event_callbacks
+
+from src.callbacks.register_callbacks import register_all_callbacks
+from src.partials import navbar, footer
+from src.services.db_service import init_db
+
 
 # load environment variables from .env file
 load_dotenv()
@@ -36,7 +36,6 @@ def serve_layout():
     return html.Div(
         [
             navbar,
-            dbc.Container(month_year_filters, className="mt-4"),
             dbc.Container(dash.page_container, className="mt-4"),
             footer
         ],
@@ -46,9 +45,8 @@ def serve_layout():
 # set layout with serve_layout function
 app.layout = serve_layout
 
-# get callbacks for each page
-get_home_callbacks(app)
-get_event_callbacks(app)
+# register all callbacks
+register_all_callbacks(app)
 
 # set server for deployment
 server = app.server

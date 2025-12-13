@@ -3,6 +3,20 @@
 from src.models.budget import Budget
 from src.services.budget.budget_helpers import get_monthly_budget_total, get_ytd_budget_total
 
+#-------- full annual budget -------
+def get_annual_budget_docs(year: int) -> list:
+    """
+    Retrieves a list of budget documents for a given year.
+
+    Args:
+        year (int): The year for which to retrieve the budget documents.
+
+    Returns:
+        list: A list of budget documents for the specified year.
+    """
+    return list(Budget.objects(year=year).order_by('month'))
+
+
 # ------- revenue -------
 def get_combined_monthly_budgeted_revenue(month: int, year: int) -> float:
     """

@@ -1,66 +1,77 @@
 # contains helper functions for metrics operations
 
-from src.utils.constants import THEME_COLORS
+def format_metric(value: float, symbol: str="$", precision: int = 2) -> str:
 
-def format_metric(value: float, symbol: str="$") -> str:
     """
-    Format a given value with a symbol.
-    
+    Formats a given value with the given symbol and precision.
+
     Args:
         value (float): The value to be formatted.
-        symbol (str): The symbol to be used for formatting. Defaults to "$".
-    
+        symbol (str): The symbol to be used for formatting.
+        precision (int): The number of decimal places to round the result to. Defaults to 2.
+
     Returns:
-        str: The formatted value as a string.
+        str: A string with the formatted value.
     """
     if symbol == "$":
         return f"${value:,.0f}"
     elif symbol == "%":
-        return f"{value:,.2f}%"
+        return f"{value:,.{precision}f}%"
 
     return f"{value:,.0f}"
 
 
-def compute_cogs_percentage(total_cost: float, total_sales: float) -> float:
+def compute_percentage(numerator: float,
+                       denominator: float,
+                       precision: int = 2,
+                       as_fraction: bool = False
+) -> float | None:
     """
-    Computes the cost of goods sold (COGS) as a percentage from passing total cost and sales values
+    Computes the percentage of a given numerator and denominator
 
     Args:
-        total_cost (float): The total cost of goods.
-        total_sales (float): The total sales of goods.
+        numerator (float): The numerator for the percentage calculation.
+        denominator (float): The denominator for the percentage calculation.
+        precision (int): The number of decimal places to round the result to. Defaults to 2.
+        as_fraction (bool): If True, the result is returned as a fraction. If False, the result is returned as a percentage. 
+                            Defaults to False.
 
     Returns:
-        float: The COGS as a percentage, rounded to 2 decimal places.
-
-    Notes:
-        If total_sales is 0.0, the function returns 0.0 as the COGS percentage.
+        float | None: The computed percentage, or None if either the numerator or denominator is None or 0.
     """
-    return round((total_cost / total_sales) * 100, 2) if total_sales > 0 else 0.0
+    if numerator is None or denominator in (None, 0):
+        return None
+
+    percent = (numerator / denominator) * 100
+
+    value = percent / 100 if as_fraction else percent
+
+    return round(value, precision)
 
 
-def compute_total_revenue(restaurant_sales: float, event_sales: float) -> float:
+def compute_total(a: float, b: float) -> float:
     """
-    Computes the total revenue from passing restaurant and event sales values
+    Computes the total from passing a and b values
 
     Args:
-        restaurant_sales (float): The total sales of restaurant.
-        event_sales (float): The total sales of events.
+        a (float): The first value.
+        b (float): The second value.
 
     Returns:
-        float: The total revenue from restaurant and event sales, rounded to 2 decimal places.
+        float: The total from a and b, rounded to 2 decimal places.
     """
-    return restaurant_sales + event_sales
+    return a + b
 
 
-def compute_total_costs(restaurant_cost: float, event_cost: float) -> float:
+def compute_gross_profit(actual_revenue : float, actual_costs: float) -> float:
     """
-    Computes the total cost from passing restaurant and event cost values
+    Computes the gross profit from passing actual revenue and actual cost values
 
     Args:
-        restaurant_cost (float): The total cost of restaurant.
-        event_cost (float): The total cost of events.
+        actual_revenue (float): The total revenue.
+        actual_costs (float): The total cost.
 
     Returns:
-        float: The total cost from restaurant and event costs, rounded to 2 decimal places.
+        float: The gross profit, rounded to 2 decimal places.
     """
-    return restaurant_cost + event_cost
+    return actual_revenue - actual_costs

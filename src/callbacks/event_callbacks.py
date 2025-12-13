@@ -2,48 +2,69 @@
 
 from dash import Input, Output
 
-from src.components import cards, charts, ui_helpers
+from src.components.events import events_page_builders
 from src.metrics import event_metrics
-from src.utils.constants import THEME_COLORS
 
 def get_event_callbacks(app):
     @app.callback(
         Output("event-monthly-summary-card", "children"),
         Output("event-ytd-bar-chart", "figure"),
+        Output("num-events-card", "children"),
+        Output("num-high-value-events-card", "children"),
+        Output("avg-event-sales-card", "children"),
+        Output("top-five-events-card", "children"),
+        Output("event-type-pie-chart", "figure"),
         Input("month-dropdown", "value"),
         Input("year-dropdown", "value"),
     )
     def update_event_page(month, year):
         """Update all Event dashboard visual components based on selected month/year."""
 
-        monthly_revenue_metrics = event_metrics.get_events_monthly_revenue_metrics(month, year)
-        py_monthly_revenue_metrics = event_metrics.get_events_monthly_revenue_metrics(month, year - 1)
+        # get all data
+        data = event_metrics.get_events_page_data(month, year)
 
-        ytd_revenue_metrics = event_metrics.get_events_ytd_revenue_metrics(month, year)
-
-        event_monthly_summary_card = cards.make_revenue_by_dept_card(
-            title="Monthly Summary",
-            current=monthly_revenue_metrics,
-            prior=py_monthly_revenue_metrics,
-            departments=["Food", "Beverage"],
-            current_variance_color=ui_helpers.get_variance_color(monthly_revenue_metrics['variance']),
-            py_variance_color=ui_helpers.get_variance_color(py_monthly_revenue_metrics['variance'])
+        # build visualizations
+        event_monthly_summary_card = events_page_builders.build_events_monthly_summary_card(
+            data["monthly_revenue_metrics"],
+            data["py_monthly_revenue_metrics"]
         )
 
-        events_ytd_bar_chart_colors = {
-            "actual": THEME_COLORS["success"],
-            "py": THEME_COLORS["warning"],
-            "budgeted": THEME_COLORS["info"]
-        }
-
-        events_ytd_bar_chart = charts.make_grouped_revenue_bar_chart(
-            ytd_revenue_metrics,
-            color_map=events_ytd_bar_chart_colors
+        events_ytd_bar_chart = events_page_builders.build_events_ytd_bar_chart(
+            data["ytd_summary_metrics"]
         )
+
+        num_events_card = events_page_builders.build_num_events_card(
+            data["num_events_monthly"],
+            data["num_events_ytd"]
+        )
+
+        num_high_value_events_card = events_page_builders.build_num_high_value_events_card(
+            data["num_high_value_events_monthly"],
+            data["num_high_value_events_ytd"]
+        )
+
+        avg_event_sales_card = events_page_builders.build_avg_event_sales_card(
+            data["avg_event_sales_monthly"],
+            data["avg_event_sales_ytd"]
+        )
+
+        top_five_events_monthly_card = events_page_builders.build_top_five_monthly_events_card(
+            data["top_five_events_monthly"]
+        )
+
+        event_type_pie_chart = events_page_builders.build_event_type_pie_chart(
+            data["events_by_type_df"]
+        )
+
 
         return (
             event_monthly_summary_card,
-            events_ytd_bar_chart
+            events_ytd_bar_chart,
+            num_events_card,
+            num_high_value_events_card,
+            avg_event_sales_card,
+            top_five_events_monthly_card,
+            event_type_pie_chart
         )
 
         

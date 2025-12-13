@@ -4,18 +4,27 @@ import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, title="Restaurant Statement")
+from src.components.core import statement_table
+from src.partials import make_month_year_filters, make_page_header
 
-# define chart divs to hold callback otput
-restaurant_statement_table = html.Div("Table to display restaurant financials similar to P&L", id="restaurant-statement-table")
+dash.register_page(__name__,
+                   title="Restaurant Statement",
+                   name="Restaurant Statement",
+                   description="Restaurant P&L statement")
+
+# define table to hold callback otput
+restaurant_statement_table = statement_table.make_statement_table(
+    table_id="restaurant-statement-table"
+)
 
 
 # define layout with dbc rows and cols, add divs with visualizations to the columns
 layout = html.Div([
-    html.H1('This is our Restaurant Statement page'),
-    html.Div('This is our Restaurant Statement page content.'),
+    make_page_header(
+        page_name=__name__,
+        filter_component=make_month_year_filters()
+    ),
     
     dbc.Row(dbc.Col(restaurant_statement_table),
-            className="mb-2",
-            id="restaurant-statement-row-1")
+            className="mb-3")
 ])

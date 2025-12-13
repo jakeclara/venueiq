@@ -319,3 +319,55 @@ def get_hot_or_cold_menu_items(
     ]
     result = RestaurantSale.objects.aggregate(*pipeline)
     return list(result)
+
+
+def get_average_sales_by_day(start_date: datetime, end_date: datetime) -> list[dict]:
+    """
+    Retrieves the average total sales per day of the week within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+
+    Returns:
+        list[dict]: A list of dictionaries containing the day of the week and the average total sales for that day.
+    """
+    pipeline = [
+        {
+            '$match': {
+                'sales_date': {
+                    '$gte': start_date,
+                    '$lt': end_date
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$sales_date",
+                "daily_total": {"$sum": "$total_sales"}
+            }
+        },
+        {
+            "$project": {
+                "daily_total": 1,
+                "day_of_week": {"$dayOfWeek": "$_id"}
+            }
+        },
+        {
+            "$group": {
+                "_id": "$day_of_week",
+                "average_sales": {"$avg": "$daily_total"}
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "day_of_week": "$_id",
+                "average_sales": 1
+            }
+        },
+
+        { "$sort": {"day_of_week": 1} }
+    ]
+    result = RestaurantSale.objects.aggregate(*pipeline)
+    return list(result)

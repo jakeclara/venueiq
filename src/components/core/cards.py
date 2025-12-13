@@ -3,25 +3,27 @@
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-from src.components.ui_helpers import variance_bar
+from src.components.core.ui_helpers import variance_bar
 from src.metrics.metrics_helpers import format_metric
 
 
 
-def make_chart_card(title: str, chart: dcc.Graph) -> dbc.Card:
+def make_chart_card(title: str, chart: dcc.Graph, footer: str = None) -> dbc.Card:
     """
-    Returns a dbc.Card object with the title and chart.
-    
+    Returns a dbc.Card object with the title, chart, and footer.
+
     Args:
         title (str): The title of the card.
-        chart (dcc.Graph): The chart to display in the card.
-    
+        chart (dcc.Graph): A dcc.Graph object to display in the card.
+        footer (str, optional): The footer of the card. Defaults to None.
+
     Returns:
-        dbc.Card: A dbc.Card object with the title and chart.
+        dbc.Card: A dbc.Card object with the title, chart, and footer.
     """
     return dbc.Card([
         dbc.CardHeader(html.H5(title, className="card-title")),
-        dbc.CardBody(chart)
+        dbc.CardBody(chart),
+        dbc.CardFooter(html.Small(footer, className="text-muted d-block")) if footer else None
     ], className="dashboard-card"
 )
 
@@ -95,6 +97,64 @@ def make_two_metrics_card(title: str, metrics: list[dict], footer: str, symbol: 
         dbc.CardFooter(html.Small(footer, className="text-muted d-block")),
     ], className="dashboard-card kpi-card"
 )
+
+
+def make_top_n_card(
+        title: str,
+        headers: list[str],
+        metrics: list[dict],
+        footer: str,
+        symbol: str="$"
+) -> dbc.Card:
+    """
+    Returns a dbc.Card object with the title, top n metrics, and footer.
+    
+    Args:
+        title (str): The title of the card.
+        headers (list[str]): A list of headers for the metrics.
+        metrics (list[dict]): A list of dictionaries containing the metric name and value.
+        footer (str): The footer of the card.
+        symbol (str): The symbol to display with the metric values. Defaults to "$".
+    
+    Returns:
+        dbc.Card: A dbc.Card object with the title, top n metrics, and footer.
+    """
+    header_row = dbc.Row([
+        dbc.Col([
+            html.P("Rank", className="card-subtitle"),
+        ], width=2),
+        dbc.Col([
+            html.P(headers[0], className="card-subtitle"),
+        ], width=6),
+        dbc.Col([
+            html.P(headers[1], className="card-subtitle"),
+        ], width=4)
+    ], className="fw-bold mb-1")
+
+    data_rows = [
+        dbc.Row([
+            dbc.Col([html.P(rank)], width=2),
+            dbc.Col(html.P(metric["name"]), width=6),
+            dbc.Col(html.P(
+                format_metric(metric["value"], symbol),
+                style={"color": metric.get("color")}
+                ), 
+                width=4
+            )
+        ], className="mb-1")
+        for rank, metric in enumerate(metrics, start=1)
+    ]
+
+    return dbc.Card([
+        dbc.CardHeader(html.H5(title, className="card-title")),
+        dbc.CardBody([
+            header_row,
+            *data_rows
+        ]),
+        dbc.CardFooter(html.Small(footer, className="text-muted d-block")),
+    ], className="dashboard-card kpi-card"
+    )
+
 
 
 def make_revenue_by_dept_card(

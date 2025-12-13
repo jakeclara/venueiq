@@ -1,33 +1,66 @@
 # restaurant snapshot page: an at-a-glance view of restaurant KPIs and metrics
 
 import dash
-from dash import html
+from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, title="Restaurant Snapshot")
+from src.components.core import cards
+from src.partials import make_month_year_filters, make_page_header
+
+dash.register_page(__name__,
+                   title="Restaurant Snapshot",
+                   name="Restaurant Snapshot",
+                   description="Key restaurant KPIs")
 
 # define chart divs to hold callback otput
-restaurant_mtd_summary_bar_chart = html.Div("Bar chart with MTD Actual, Monthly Budget, PY Actual", id="restaurant-mtd-summary-bar-chart")
-restaurant_ytd_summary_bar_chart = html.Div("Bar chart with YTD Actual, YTD Budget, PY Actual", id="restaurant-ytd-summary-bar-chart")
-top_five_food_items_bar_chart = html.Div("Top 5 selling food items", id="top-five-food-items-bar-chart")
-restaurant_revenue_mix_chart = html.Div("Restaurant revenue mix", id="restaurant-revenue-mix-pie-chart")
-hot_menu_items_card = html.Div("Menu item trending up", id="hot-menu-items-card")
-cold_menu_items_card = html.Div("Menu item trending down", id="cold-menu-items-card")
+avg_sales_by_day_line_chart = dcc.Graph(
+    id="avg-sales-by-day-line-chart",
+    figure={},
+    style={"height": "var(--chart-height)"}
+)
+top_five_menu_items_card = html.Div(id="top-five-menu-items-card")
+hot_menu_items_card = html.Div(id="hot-menu-items-card")
+cold_menu_items_card = html.Div(id="cold-menu-items-card")
+sales_by_category_pie_chart = dcc.Graph(
+    id="sales-by-category-pie-chart",
+    figure={},
+    style={"height": "var(--chart-height)"}
+)
+
 
 # define layout with dbc rows and cols, add divs with visualizations to the columns
 layout = html.Div([
-    html.H1('This is our Restaurant Snapshot page'),
-    html.Div('This is our Restaurant Snapshot page content.'),
+    make_page_header(
+        page_name=__name__,
+        filter_component=make_month_year_filters()
+    ),
     
-    dbc.Row([dbc.Col(restaurant_mtd_summary_bar_chart), dbc.Col(restaurant_ytd_summary_bar_chart)],
-            className="mb-2",
-            id="restaurant-snapshot-row-1"),
+    dbc.Row([
+        dbc.Col([
+            cards.make_chart_card(
+                "Avg Sales by Day",
+                avg_sales_by_day_line_chart,
+                "Monthly"
+            )
+        ], xs=12, lg=6, className="mb-4"),
+        dbc.Col([
+            top_five_menu_items_card
+        ], xs=12, lg=6, className="mb-4"),
+    ]),
 
-    dbc.Row([dbc.Col(top_five_food_items_bar_chart),dbc.Col(restaurant_revenue_mix_chart)],
-            className="mb-2",
-            id="restaurant-snapshot-row-2"),
-
-    dbc.Row([dbc.Col(hot_menu_items_card), dbc.Col(cold_menu_items_card)],
-            className="mb-2",
-            id="restaurant-snapshot-row-3")
+    dbc.Row([
+        dbc.Col([
+            hot_menu_items_card
+        ], xs=12, lg=4, className="mb-4"),
+        dbc.Col([
+            cold_menu_items_card
+        ], xs=12, lg=4, className="mb-4"),
+        dbc.Col([
+            cards.make_chart_card(
+                "Sales by Category",
+                sales_by_category_pie_chart,
+                "YTD"
+            )
+        ], xs=12, lg=4, className="mb-4")
+    ]),
 ])
