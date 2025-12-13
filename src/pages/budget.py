@@ -4,18 +4,26 @@ import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__)
+from src.components.budget import budget_table
+from src.partials import make_year_filter, make_page_header
+
+
+dash.register_page(__name__,
+                   name="Budget",
+                   description="Budgeted P&L for venue")
 
 # define chart divs to hold callback otput
-budget_table = html.Div("Table to display budget similar to P&L", id="budget-table")
+budget_table = budget_table.make_budget_table(table_id="budget-table")
 
 
 # define layout with dbc rows and cols, add divs with visualizations to the columns
 layout = html.Div([
-    html.H1('This is our Budget page'),
-    html.Div('This is our Budget page content.'),
+    make_page_header(
+        page_name=__name__,
+        filter_component=make_year_filter()
+    ),
     
     dbc.Row(dbc.Col(budget_table),
-            className="mb-2",
-            id="budget-row-1")
+            className="mb-3",
+    )
 ])

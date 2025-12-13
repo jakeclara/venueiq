@@ -77,7 +77,7 @@ def get_events_gross_profit(start_date: datetime, end_date: datetime) -> float:
     return gross_profit
 
 
-def get_event_with_highest_sales(start_date: datetime, end_date: datetime, limit: int = 1) -> list[dict]:
+def get_events_with_highest_sales(start_date: datetime, end_date: datetime, limit: int = 1) -> list[dict]:
     """
     Retrieves a list of events with the highest total sales within a given date range,
     sorted in descending order of total sales.
@@ -122,7 +122,7 @@ def get_event_with_highest_sales(start_date: datetime, end_date: datetime, limit
     return list(result)
 
 
-def get_num_of_events(start_date: datetime, end_date: datetime) -> int:
+def get_num_events(start_date: datetime, end_date: datetime) -> int:
     """
     Returns the number of events within a given date range.
 
@@ -138,6 +138,27 @@ def get_num_of_events(start_date: datetime, end_date: datetime) -> int:
         event_date__lt=end_date
         ).count()
     return number_of_events
+
+
+def get_num_events_above_threshold(start_date: datetime, end_date: datetime, threshold: float) -> int:
+    
+    """
+    Retrieves the number of events with total sales above a given threshold within a given date range.
+
+    Args:
+        start_date (datetime): The start date of the date range.
+        end_date (datetime): The end date of the date range.
+        threshold (float): The minimum total sales required for an event to be included in the count.
+
+    Returns:
+        int: The number of events with total sales above the given threshold within the given date range.
+    """
+    number_of_events_above_threshold = Event.objects(
+        event_date__gte=start_date, 
+        event_date__lt=end_date,
+        total_sales__gt=threshold
+        ).count()
+    return number_of_events_above_threshold
 
 
 def get_events_above_threshold(start_date: datetime, end_date: datetime, threshold: float) -> list[dict]:
@@ -218,16 +239,17 @@ def get_average_event_sales(start_date: datetime, end_date: datetime) -> float:
 
 def get_event_type_breakdown(start_date: datetime, end_date: datetime) -> list[dict]:
     """
-    Computes the total number of events for each event type within a given date range
+    Retrieves a list of dictionaries containing the event type breakdown for a given date range.
 
     Args:
         start_date (datetime): The start date of the date range.
         end_date (datetime): The end date of the date range.
 
     Returns:
-        list[dict]: A list of dictionaries containing the event type and its corresponding count,
-            sorted in descending order of count.
+        list[dict]: A list of dictionaries containing the event type and total sales for each event 
+        type within the given date range.
     """
+
     pipeline = [
         {
             '$match': {
@@ -240,19 +262,19 @@ def get_event_type_breakdown(start_date: datetime, end_date: datetime) -> list[d
         {
             '$group': {
                 '_id': '$event_type',
-                'count': {'$sum': 1}
+                'total_sales': {'$sum': '$total_sales'}
             }
         },
         {
             '$project': {
                 'event_type': '$_id',
-                'count': 1,
+                'total_sales': 1,
                 '_id': 0
             }
         },
         {
             '$sort': {
-                'count': -1
+                'total_sales': -1
             }
         }
     ]

@@ -1,8 +1,56 @@
 # executes aggregates and structures results for home page callback
 
-from src.metrics.metrics_helpers import compute_cogs_percentage, compute_total_costs, compute_total_revenue
+from src.metrics import metrics_helpers
+from src.metrics.metrics_helpers import compute_percentage, compute_total
 from src.utils import dates
 from src.services import budget, event_service, restaurant_service
+
+
+def get_home_page_data(month: int, year: int) -> dict:
+        """
+        Retrieves all Home dashboard visual components based on selected month/year.
+
+        Args:
+            month (int): The month for which to retrieve the Home dashboard visual components.
+            year (int): The year for which to retrieve the Home dashboard visual components.
+
+        Returns:
+            dict: A dictionary containing the monthly and year-to-date Home page metrics.
+        """
+        monthly_revenue_metrics = get_combined_monthly_revenue_metrics(month, year)
+        py_monthly_revenue_metrics = get_combined_monthly_revenue_metrics(month, year - 1)
+        ytd_revenue_metrics = get_combined_ytd_revenue_metrics(month, year)
+        py_ytd_revenue_metrics = get_combined_ytd_revenue_metrics(month, year - 1)
+        ytd_cost_metrics = get_combined_ytd_cost_metrics(month, year)
+        ytd_gross_profit = metrics_helpers.compute_gross_profit(
+            ytd_revenue_metrics['total_revenue'],
+            ytd_cost_metrics['actual_total_costs'],
+        )
+        budgeted_ytd_gross_profit = metrics_helpers.compute_gross_profit(
+            ytd_revenue_metrics['budgeted_revenue'],
+            ytd_cost_metrics['budgeted_total_costs']
+        )
+        cogs_pct_metrics = compute_cogs_pct_metrics(ytd_revenue_metrics, ytd_cost_metrics)
+        top_menu_item = get_top_menu_item(period="ytd", month=month, year=year)
+        py_top_menu_item = get_top_menu_item(period="ytd", month=month, year=year - 1)
+        top_selling_event = get_top_event(period="ytd", month=month, year=year)
+        py_top_selling_event = get_top_event(period="ytd", month=month, year=year - 1)
+
+        return {
+            'monthly_revenue_metrics': monthly_revenue_metrics,
+            'py_monthly_revenue_metrics': py_monthly_revenue_metrics,
+            'ytd_revenue_metrics': ytd_revenue_metrics,
+            'py_ytd_revenue_metrics': py_ytd_revenue_metrics,
+            'ytd_cost_metrics': ytd_cost_metrics,
+            'ytd_gross_profit': ytd_gross_profit,
+            'budgeted_ytd_gross_profit': budgeted_ytd_gross_profit,
+            'cogs_pct_metrics': cogs_pct_metrics,
+            'top_menu_item': top_menu_item,
+            'py_top_menu_item': py_top_menu_item,
+            'top_selling_event': top_selling_event,
+            'py_top_selling_event': py_top_selling_event
+        }
+
 
 def get_combined_monthly_revenue_metrics(month: int, year: int) -> dict:
     """
@@ -21,7 +69,7 @@ def get_combined_monthly_revenue_metrics(month: int, year: int) -> dict:
     budgeted_revenue = budget.combined_budget_service.get_combined_monthly_budgeted_revenue(month, year)
     restaurant_revenue = restaurant_service.get_total_restaurant_sales(start, end)
     events_revenue = event_service.get_total_event_sales(start, end)
-    total_revenue = compute_total_revenue(restaurant_revenue, events_revenue)
+    total_revenue = compute_total(restaurant_revenue, events_revenue)
     variance = total_revenue - budgeted_revenue
 
     return {
@@ -54,7 +102,7 @@ def get_combined_ytd_revenue_metrics(month: int, year: int) -> dict:
     budgeted_restaurant_revenue = budget.restaurant_budget_service.get_ytd_budgeted_restaurant_revenue(month, year)
     event_revenue = event_service.get_total_event_sales(start, end)
     budgeted_event_revenue = budget.event_budget_service.get_ytd_budgeted_event_revenue(month, year)
-    total_revenue = compute_total_revenue(restaurant_revenue, event_revenue)
+    total_revenue = compute_total(restaurant_revenue, event_revenue)
     variance = total_revenue - budgeted_revenue
 
     return {
@@ -86,10 +134,10 @@ def get_combined_ytd_cost_metrics(month: int, year: int) -> dict:
 
     restaurant_costs = restaurant_service.get_total_restaurant_costs(start, end)
     event_costs = event_service.get_total_event_costs(start, end)
-    actual_total_costs = compute_total_costs(restaurant_costs, event_costs)
+    actual_total_costs = compute_total(restaurant_costs, event_costs)
     budgeted_restaurant_costs = budget.restaurant_budget_service.get_ytd_budgeted_restaurant_cost(month, year)
     budgeted_event_costs = budget.event_budget_service.get_ytd_budgeted_event_cost(month, year)
-    budgeted_total_costs = compute_total_costs(budgeted_restaurant_costs, budgeted_event_costs)
+    budgeted_total_costs = compute_total(budgeted_restaurant_costs, budgeted_event_costs)
 
     return {
         'month': month,
@@ -114,19 +162,19 @@ def compute_cogs_pct_metrics(revenue_metrics: dict, cost_metrics: dict) -> dict:
     Returns:
         dict: A dictionary containing the computed COGS percentages for restaurant and event sales.
     """
-    restaurant_actual_cogs_pct = compute_cogs_percentage(
+    restaurant_actual_cogs_pct = compute_percentage(
         cost_metrics['restaurant_costs'],
         revenue_metrics['restaurant_revenue']
     )
-    restaurant_budgeted_cogs_pct = compute_cogs_percentage(
+    restaurant_budgeted_cogs_pct = compute_percentage(
         cost_metrics['budgeted_restaurant_costs'],
         revenue_metrics['budgeted_restaurant_revenue']
     )
-    event_actual_cogs_pct = compute_cogs_percentage(
+    event_actual_cogs_pct = compute_percentage(
         cost_metrics['event_costs'],
         revenue_metrics['event_revenue']
     )
-    event_budgeted_cogs_pct = compute_cogs_percentage(
+    event_budgeted_cogs_pct = compute_percentage(
         cost_metrics['budgeted_event_costs'],
         revenue_metrics['budgeted_event_revenue']
     )
@@ -136,29 +184,6 @@ def compute_cogs_pct_metrics(revenue_metrics: dict, cost_metrics: dict) -> dict:
         'restaurant_budgeted_cogs_pct': restaurant_budgeted_cogs_pct,
         'event_actual_cogs_pct': event_actual_cogs_pct,
         'event_budgeted_cogs_pct': event_budgeted_cogs_pct
-    }
-
-
-def compute_gross_profit(actual_revenue : float,
-                         actual_costs: float,
-                         budgeted_revenue: float,
-                         budgeted_costs: float
-) -> dict:
-    """
-    Computes the gross profit from passing actual and budgeted revenue and costs values
-
-    Args:
-        actual_revenue (float): The actual revenue.
-        actual_costs (float): The actual costs.
-        budgeted_revenue (float): The budgeted revenue.
-        budgeted_costs (float): The budgeted costs.
-
-    Returns:
-        dict: A dictionary containing the computed actual and budgeted gross profit values.
-    """
-    return {
-        "actual": actual_revenue - actual_costs,
-        "budgeted": budgeted_revenue - budgeted_costs
     }
 
 
@@ -195,7 +220,7 @@ def get_top_event(period: str, month: int, year: int) -> dict:
         dict: A dictionary containing the name and total sales of the top selling event, or None if no events are found.
     """
     start, end = dates.get_period_range(period, month, year)
-    events = event_service.get_event_with_highest_sales(start, end, limit=1)
+    events = event_service.get_events_with_highest_sales(start, end, limit=1)
     if events:
         event = events[0]
         return {"name": event["display_name"], "total_sales": event["total_sales"]}

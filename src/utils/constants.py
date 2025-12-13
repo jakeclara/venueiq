@@ -12,6 +12,26 @@ THEME_COLORS = {
     "dark": "#7b8a8b",
 }
 
+# colors for the statement table component
+STATEMENT_TABLE_COLORS = {
+    "header": THEME_COLORS["primary"],
+    "header_text": "#ffffff",
+    "odd": "#f8f8f8",
+    "total_border": "#bbbbbb",
+    "pct_column_bg": "#e8ecee",
+}
+
+# days of the week abbreviations mapped to their number representation
+DAYS_OF_WEEK = {
+    1: "Sun",
+    2: "Mon",
+    3: "Tues",
+    4: "Wed",
+    5: "Thurs",
+    6: "Fri",
+    7: "Sat",
+}
+
 # month options for dropdown filters
 MONTHS = [
     {"label": month_name, "value": month_number}
@@ -24,6 +44,12 @@ MONTHS = [
 
 # year options for dropdown filters (only one option for demo)
 YEARS = [{"label": "2025", "value": 2025}]
+
+# year options for budget dropdown (only two options for demo)
+BUDGET_YEARS = [
+    {"label": "2025", "value": 2025},
+    {"label": "2024", "value": 2024}
+]
 
 
 # event types for banquet event model
@@ -38,3 +64,11 @@ EVENT_TYPES = [
 
 # menu item types for menu item model
 MENU_CATEGORIES = ["Food", "Beverage"]
+
+# statement section headers
+STATEMENT_SECTION_HEADERS = [
+    "Revenues",
+    "Cost of Goods Sold",
+    "COGS - %",
+    "Gross Profit",
+]

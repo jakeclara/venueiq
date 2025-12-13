@@ -4,9 +4,13 @@ import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-from src.components import cards
+from src.components.core import cards
+from src.partials import make_page_header, make_month_year_filters
 
-dash.register_page(__name__)
+dash.register_page(__name__,
+                   name="Banquet",
+                   description="YTD and monthly event metrics"
+)
 
 # define chart divs to hold callback otput
 monthly_summary_card =  html.Div(id="event-monthly-summary-card")
@@ -15,39 +19,57 @@ ytd_bar_chart = dcc.Graph(
     figure={},
     style={"height": "var(--chart-height)"}
 )
-
-num_events_mtd_card = html.Div("Number of events MTD", id="num-events-mtd-card")
-num_events_ytd_card = html.Div("Number of events YTD", id="num-events-ytd-card")
-event_mtd_summary_bar_chart = html.Div("Bar chart with MTD Actual, Monthly Budget, PY Actual", id="event-mtd--bar-chart")
-event_ytd_summary_bar_chart = html.Div("Bar chart with YTD Actual, YTD Budget, PY Actual", id="event-ytd--bar-chart")
-num_high_revenue_events_card = html.Div("Number of events generating $5,000+", id="num-high-revenue-events-card")
-top_five_grossing_events_bar_chart = html.Div("Top 5 grossing events", id="top-five-grossing-events-bar-chart")
-avg_revenue_per_event_card = html.Div("Average revenue per event (MTD)", id="avg-revenue-per-event-card")
-event_type_mix_chart = html.Div("Event type mix", id="event-type-mix-pie-chart")
+num_events_card = html.Div(id="num-events-card")
+num_high_value_events_card = html.Div(id="num-high-value-events-card")
+avg_event_sales_card = html.Div(id="avg-event-sales-card")
+top_five_events_card = html.Div(id="top-five-events-card")
+event_type_pie_chart = dcc.Graph(
+    id="event-type-pie-chart",
+    figure={},
+    style={"height": "var(--chart-height)"}
+)
 
 # define layout with dbc rows and cols, add divs with visualizations to the columns
 layout = html.Div([
+    make_page_header(
+        page_name=__name__,
+        filter_component=make_month_year_filters()
+    ),
+
     dbc.Row([
         dbc.Col([
             monthly_summary_card
-        ], xs=12, md=6, className="mb-4"),
+        ], xs=12, lg=6, className="mb-4"),
         dbc.Col([
             cards.make_chart_card(
-                "YTD Revenue",
+                "YTD Summary",
                 ytd_bar_chart
             )
-        ], xs=12, md=6, className="mb-4"),
+        ], xs=12, lg=6, className="mb-4"),
     ]),
 
-    dbc.Row([dbc.Col(event_mtd_summary_bar_chart),dbc.Col(event_ytd_summary_bar_chart)],
-            className="mb-2",
-            ),
+    dbc.Row([
+        dbc.Col([
+            num_events_card
+        ], xs=12, lg=4, className="mb-4"),
+        dbc.Col([
+            num_high_value_events_card
+        ], xs=12, lg=4, className="mb-4"),
+        dbc.Col([
+            avg_event_sales_card
+        ], xs=12, lg=4, className="mb-4"),
+    ]),
 
-    dbc.Row([dbc.Col(num_high_revenue_events_card), dbc.Col(top_five_grossing_events_bar_chart)],
-            className="mb-2",
-            ),
-
-    dbc.Row([dbc.Col(avg_revenue_per_event_card), dbc.Col(event_type_mix_chart)],
-            className="mb-2",
-            ),
+    dbc.Row([
+        dbc.Col([
+            top_five_events_card
+        ], xs=12, lg=6, className="mb-4"),
+        dbc.Col([
+            cards.make_chart_card(
+                "Sales by Event Type",
+                event_type_pie_chart,
+                "YTD"
+            )
+        ], xs=12, lg=6, className="mb-4"),
+    ]),
 ])

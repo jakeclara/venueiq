@@ -4,10 +4,15 @@ import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-from src.components import cards
+from src.components.core import cards
+from src.partials import make_month_year_filters, make_page_header
 
 # set path to '/' otherwise would auto to '/home'
-dash.register_page(__name__, path='/', title="VenueIQ Main Dashboard")
+dash.register_page(__name__, 
+                   path='/',
+                   title="Home | Main Dashboard",
+                   name="Home",
+                   description="Facility-wide summary (restaurant + events)")
 
 # define charts and divs to hold callback otput
 monthly_revenue_progress_chart = dcc.Graph(
@@ -30,40 +35,45 @@ revenue_breakdown_pie_chart = dcc.Graph(
 
 # define layout with dbc rows and cols
 layout = html.Div([
+    make_page_header(
+        page_name=__name__,
+        filter_component=make_month_year_filters()
+    ),
+
     dbc.Row([
         dbc.Col([
             cards.make_chart_card(
                 "% of Budgeted Monthly Revenue",
                 monthly_revenue_progress_chart
             )
-        ], xs=12, md=6, className="mb-4"),
+        ], xs=12, lg=6, className="mb-4"),
         dbc.Col([
             monthly_summary_card
-        ], xs=12, md=6, className="mb-4"),
+        ], xs=12, lg=6, className="mb-4"),
     ]),
     dbc.Row([
         dbc.Col([
             ytd_revenue_card
-        ], xs=12, md=4, className="mb-4"),
+        ], xs=12, lg=4, className="mb-4"),
         dbc.Col([
             cogs_kpi_card
-        ], xs=12, md=4, className="mb-4"),
+        ], xs=12, lg=4, className="mb-4"),
         dbc.Col([
             profit_card
-        ], xs=12, md=4, className="mb-4"),
+        ], xs=12, lg=4, className="mb-4"),
     ]),
     dbc.Row([
         dbc.Col([
             top_menu_item_card
-        ], xs=12, md=4, className="mb-4"),
+        ], xs=12, lg=4, className="mb-4"),
         dbc.Col([
             top_event_card
-        ], xs=12, md=4, className="mb-4"),
+        ], xs=12, lg=4, className="mb-4"),
         dbc.Col([
             cards.make_chart_card(
                 "Revenue Breakdown",
                 revenue_breakdown_pie_chart
             )
-        ], xs=12, md=4, className="mb-4"),
+        ], xs=12, lg=4, className="mb-4"),
     ]),
 ])

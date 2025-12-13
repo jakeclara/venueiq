@@ -1,14 +1,17 @@
 # components/__init__.py
 
-# reusable chart components
-from . import charts
+# reusable core components
+from . import core
 
-# reusable card components
-from . import cards
+# home component builders
+from . import home
 
-# reusable ui helpers
-from .ui_helpers import (
-    get_donut_chart_colors,
-    get_variance_color,
-    variance_bar,
-)
+# banquet component builders
+from . import events
+
+# budget component builders
+from . import budget
+
+# restaurant component builders
+from . import restaurant
+

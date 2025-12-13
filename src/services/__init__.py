@@ -11,3 +11,6 @@ from . import event_service
 
 # restaurant service methods
 from . import restaurant_service
+
+# query helpers
+from . import query_helpers

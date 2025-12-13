@@ -4,17 +4,22 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
-from src.utils.constants import THEME_COLORS
-
-def make_pie_chart(data: pd.DataFrame, names: str, values: str, **kwargs: dict) -> go.Figure:
+def make_pie_chart(
+        data: pd.DataFrame,
+        names: str,
+        values: str,
+        color_map: dict | None = None,
+        **kwargs: dict) -> go.Figure:
+    
     """
-    Creates a pie chart from the given DataFrame.
+    Creates a pie chart from the given data.
 
     Parameters:
-    data (pd.DataFrame): The DataFrame containing the data to plot.
-    names (str): The column name of the data to use as names.
-    values (str): The column name of the data to use as values.
-    *kwargs (dict): Additional keyword arguments to pass to plotly.express.pie.
+    data (pd.DataFrame): A pandas DataFrame containing the data to plot.
+    names (str): The column name in the DataFrame to use for the pie chart labels.
+    values (str): The column name in the DataFrame to use for the pie chart values.
+    color_map (dict | None): A dictionary containing the theme colors to use for each metric.
+    **kwargs (dict): Additional keyword arguments to pass to plotly.graph_objects.Pie.
 
     Returns:
     go.Figure: The pie chart figure.
@@ -23,6 +28,8 @@ def make_pie_chart(data: pd.DataFrame, names: str, values: str, **kwargs: dict) 
                  names=names,
                  values=values,
                  hover_name=names,
+                 color=names,
+                 color_discrete_map=color_map,
                  **kwargs)
     
     fig.update_traces(
@@ -73,53 +80,32 @@ def make_budget_donut(actual: float, budgeted: float, color_map: dict | None = N
 
 def make_grouped_revenue_bar_chart(data: dict, color_map: dict | None = None, **kwargs: dict) -> go.Figure:
     """
-    Creates a grouped bar chart comparing actual revenue, prior year revenue, and budgeted revenue.
+    Creates a grouped bar chart from the given data.
 
     Parameters:
-    data (dict): A dictionary containing the actual, prior year, and budgeted revenue data.
-    color_map (dict | None): A dictionary of theme colors to use for the bars.
+    data (dict): A dictionary containing the data to plot.
+    color_map (dict | None): A dictionary containing the theme colors to use for each metric.
     **kwargs (dict): Additional keyword arguments to pass to plotly.graph_objects.Bar.
 
     Returns:
     go.Figure: The grouped bar chart figure.
     """
-    # create a figure and add a bar trace for actual revenue
+    categories = list(data.keys())
+    categories_display = [category.title() for category in categories]
+    metrics = list(next(iter(data.values())).keys())
+    metrics_display = [metric.title() for metric in metrics]
+
     fig = go.Figure()
-    fig.add_bar(
-        name="Actual",
-        x=["Food", "Beverage", "Total"],
-        y=[
-            data["food"]["actual"],
-            data["beverage"]["actual"],
-            data["total"]["actual"]
-        ],
-        marker_color=color_map["actual"] if color_map else None,
-        **kwargs
-    )
 
-    # add a bar trace for prior year revenue
-    fig.add_bar(
-        name="Prior Year",
-        x=["Food", "Beverage", "Total"],
-        y=[
-            data["food"]["py"],
-            data["beverage"]["py"],
-            data["total"]["py"]
-        ],
-        marker_color=color_map["py"] if color_map else None,
-        **kwargs
-    )
-
-    # add a bar trace for budgeted revenue
-    fig.add_bar(
-        name="Budget",
-        x=["Total"],
-        y=[data["total"]["budgeted"]],
-        marker_color=color_map["budgeted"] if color_map else None,
-        **kwargs
-    )
-
-    # update the layout of the figure
+    for metric, metric_display in zip(metrics, metrics_display):
+        fig.add_bar(
+            x=categories_display,
+            y=[data[category][metric] for category in categories],
+            name=metric_display,
+            marker_color=color_map[metric] if color_map else None,
+            **kwargs
+        )
+    
     fig.update_layout(
         barmode='group',
         xaxis_title="",
