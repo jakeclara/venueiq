@@ -1,13 +1,13 @@
 # metrics/__init__.py
 
 # budget page metrics
-from . import budget_metrics
+from . import budget
 
 # home page metrics
-from . import home_metrics
+from . import home
 
 # banquet page metrics
-from . import event_metrics
+from . import events
 
 # restaurant page metrics (snapshot and statement)
 from . import restaurant

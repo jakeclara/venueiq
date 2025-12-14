@@ -3,6 +3,9 @@
 from typing import Type
 from mongoengine.document import Document
 
+from src.utils.decorators import safe_query
+
+
 def get_monthly_budget_total(model: Type[Document], month: int, year: int, field: str) -> float:
     """
     Retrieves the total value of a given field in a budget document
@@ -29,6 +32,7 @@ def get_monthly_budget_total(model: Type[Document], month: int, year: int, field
     return 0.0
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budget_total(model: Type[Document],month: int, year: int, field: str) -> float:
     """
     Retrieves the year-to-date (YTD) total value of a given field in a budget document

@@ -2,8 +2,10 @@
 
 from src.models.budget import Budget
 from src.services.budget.budget_helpers import get_monthly_budget_total, get_ytd_budget_total
+from src.utils.decorators import safe_query
 
 #-------- full annual budget -------
+@safe_query(fallback=[])
 def get_annual_budget_docs(year: int) -> list:
     """
     Retrieves a list of budget documents for a given year.
@@ -18,6 +20,7 @@ def get_annual_budget_docs(year: int) -> list:
 
 
 # ------- revenue -------
+@safe_query(fallback=0.0)
 def get_combined_monthly_budgeted_revenue(month: int, year: int) -> float:
     """
     Retrieves the combined monthly budgeted revenue for a given month and year.
@@ -32,6 +35,7 @@ def get_combined_monthly_budgeted_revenue(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'total_sales')
 
 
+@safe_query(fallback=0.0)
 def get_combined_ytd_budgeted_revenue(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted revenue for a given month and year.
@@ -47,6 +51,7 @@ def get_combined_ytd_budgeted_revenue(month: int, year: int) -> float:
 
 
 # ------- cost -------
+@safe_query(fallback=0.0)
 def get_combined_monthly_budgeted_cost(month: int, year: int) -> float:
     """
     Retrieves the combined monthly budgeted cost for a given month and year.
@@ -61,6 +66,7 @@ def get_combined_monthly_budgeted_cost(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'total_cost')
 
 
+@safe_query(fallback=0.0)
 def get_combined_ytd_budgeted_cost(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted cost for a given month and year.
@@ -76,6 +82,7 @@ def get_combined_ytd_budgeted_cost(month: int, year: int) -> float:
 
 
 # ------- profit -------
+@safe_query(fallback=0.0)
 def get_combined_monthly_budgeted_profit(month: int, year: int) -> float:
     """
     Retrieves the combined monthly budgeted profit for a given month and year.
@@ -90,6 +97,7 @@ def get_combined_monthly_budgeted_profit(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'gross_profit')
 
 
+@safe_query(fallback=0.0)
 def get_combined_ytd_budgeted_profit(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted profit for a given month and year.

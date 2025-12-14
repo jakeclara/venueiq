@@ -1,7 +1,6 @@
 # executes aggregates for the budget page
 
 from src.services import budget
-from src.metrics.metrics_helpers import compute_percentage, format_metric
 
 def get_annual_budget_data(year: int) -> list:
     """

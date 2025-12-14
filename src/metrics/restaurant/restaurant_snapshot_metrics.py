@@ -53,7 +53,7 @@ def get_avg_sales_by_day(period: str, month: int, year: int) -> list[dict]:
     ]
 
 
-def get_sales_by_category(period: str, month: int, year: int) -> dict:
+def get_sales_by_category(period: str, month: int, year: int) -> pd.DataFrame:
     """
     Retrieves the total restaurant sales grouped by category within a given date range.
 
@@ -63,7 +63,7 @@ def get_sales_by_category(period: str, month: int, year: int) -> dict:
         year (int): The calendar year for which to retrieve the total restaurant sales grouped by category.
 
     Returns:
-        dict: A pandas DataFrame containing the category and total sales for each category.
+        pd.DataFrame: A pandas DataFrame containing the category and total sales for each category.
     """
     start, end = dates.get_period_range(period, month, year)
     sales_by_category = restaurant_service.get_restaurant_sales_by_category(start, end)

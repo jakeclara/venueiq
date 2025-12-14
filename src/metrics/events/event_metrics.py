@@ -141,7 +141,7 @@ def compute_num_events(period: str, year: int, month: int) -> list[dict]:
     ]
 
 
-def compute_num_events_above_threshold(period: str, year: int, month: int, threshold: float) -> int:
+def compute_num_events_above_threshold(period: str, year: int, month: int, threshold: float) -> list[dict]:
     """
     Computes the number of events with total sales above a given threshold 
     for a given period (monthly or ytd), year, and month.

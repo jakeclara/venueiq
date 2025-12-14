@@ -54,3 +54,32 @@ def variance_bar(variance: float) -> html.Div:
             "borderRadius": "3px",
         }
     )
+
+
+def make_error_card(message: str="Data Unavailable") -> html.Div:
+    """
+    Make an error card with a given message.
+
+    Returns an html.Div element with a style that displays an error message.
+
+    Args:
+        message (str): The error message to display.
+
+    Returns:
+        html.Div: An html.Div element with a style that displays an error message.
+    """
+    return html.Div(
+        [
+            # indicate an error
+            html.H6("ERROR", className="text-danger"),
+            
+            # specific error message
+            html.P(message, className="text-muted")
+        ],
+        style={
+            'border': '1px dashed #000000', 
+            'padding': '10px',
+            'textAlign': 'center',
+            'minHeight': '200px'
+        }
+    )

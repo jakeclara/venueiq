@@ -3,7 +3,9 @@
 from src.models.event import Event
 from datetime import datetime
 from src.services.query_helpers import get_total_field
+from src.utils.decorators import safe_query
 
+@safe_query(fallback=0.0)
 def get_total_event_sales(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total event sales within a given date range.
@@ -18,6 +20,7 @@ def get_total_event_sales(start_date: datetime, end_date: datetime) -> float:
     return get_total_field(Event, 'total_sales', start_date, end_date, 'event_date')
 
 
+@safe_query(fallback=0.0)
 def get_total_event_food_sales(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total event food sales within a given date range.
@@ -32,6 +35,7 @@ def get_total_event_food_sales(start_date: datetime, end_date: datetime) -> floa
     return get_total_field(Event, 'food_sales', start_date, end_date, 'event_date')
 
 
+@safe_query(fallback=0.0)
 def get_total_event_bev_sales(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total event bev sales within a given date range.
@@ -46,6 +50,7 @@ def get_total_event_bev_sales(start_date: datetime, end_date: datetime) -> float
     return get_total_field(Event, 'bev_sales', start_date, end_date, 'event_date')
 
 
+@safe_query(fallback=0.0)
 def get_total_event_costs(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total event costs within a given date range.
@@ -60,6 +65,7 @@ def get_total_event_costs(start_date: datetime, end_date: datetime) -> float:
     return get_total_field(Event, 'total_cost', start_date, end_date, 'event_date')
 
 
+@safe_query(fallback=0.0)
 def get_events_gross_profit(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total gross profit for event sales within a given date range.
@@ -77,6 +83,7 @@ def get_events_gross_profit(start_date: datetime, end_date: datetime) -> float:
     return gross_profit
 
 
+@safe_query(fallback=[])
 def get_events_with_highest_sales(start_date: datetime, end_date: datetime, limit: int = 1) -> list[dict]:
     """
     Retrieves a list of events with the highest total sales within a given date range,
@@ -122,6 +129,7 @@ def get_events_with_highest_sales(start_date: datetime, end_date: datetime, limi
     return list(result)
 
 
+@safe_query(fallback=0)
 def get_num_events(start_date: datetime, end_date: datetime) -> int:
     """
     Returns the number of events within a given date range.
@@ -140,6 +148,7 @@ def get_num_events(start_date: datetime, end_date: datetime) -> int:
     return number_of_events
 
 
+@safe_query(fallback=0)
 def get_num_events_above_threshold(start_date: datetime, end_date: datetime, threshold: float) -> int:
     
     """
@@ -161,6 +170,7 @@ def get_num_events_above_threshold(start_date: datetime, end_date: datetime, thr
     return number_of_events_above_threshold
 
 
+@safe_query(fallback=[])
 def get_events_above_threshold(start_date: datetime, end_date: datetime, threshold: float) -> list[dict]:
     """
     Returns a list of events that have a total sales above a given threshold
@@ -205,6 +215,7 @@ def get_events_above_threshold(start_date: datetime, end_date: datetime, thresho
     return list(result)
 
 
+@safe_query(fallback=0.0)
 def get_average_event_sales(start_date: datetime, end_date: datetime) -> float:
     """
     Computes the average total sales per event within a given date range.
@@ -237,6 +248,7 @@ def get_average_event_sales(start_date: datetime, end_date: datetime) -> float:
     return round(average_sales, 2)
 
 
+@safe_query(fallback=[])
 def get_event_type_breakdown(start_date: datetime, end_date: datetime) -> list[dict]:
     """
     Retrieves a list of dictionaries containing the event type breakdown for a given date range.

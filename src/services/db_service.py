@@ -2,6 +2,10 @@
 
 from mongoengine import connect
 import os
+import logging
+
+# create logger
+logger = logging.getLogger(__name__)
 
 def validate_env_vars(*variables: str) -> bool:
     """
@@ -19,21 +23,16 @@ def validate_env_vars(*variables: str) -> bool:
     return True
 
 
-def init_db() -> bool:
+def init_db() -> None:    
     """
-    Connect to the MongoDB database using environment variables.
+    Initializes the database connection.
 
-    Assumes that the required environment variables have already 
-    been loaded.
-
-    Returns:
-        bool: True if the connection was successful, False otherwise.
-    """      
-
+    :raises EnvironmentError: If any of the required environment variables are missing.
+    :raises Exception: If the database connection fails.
+    """
     if not validate_env_vars("MONGO_USER", "MONGO_PASSWORD", "MONGO_HOST", "MONGO_DB"):
-        # TODO: remove this debug print statement
-        print("Environment variable missing")
-        return False
+        logger.critical("Environment variable missing")
+        raise EnvironmentError("Cannot connect to DB: Environment variable missing")
     
     user = os.getenv("MONGO_USER")
     password = os.getenv("MONGO_PASSWORD")
@@ -41,12 +40,11 @@ def init_db() -> bool:
     db = os.getenv("MONGO_DB")
     uri = f"mongodb+srv://{user}:{password}@{host}/{db}?retryWrites=true&w=majority"
 
+    logger.info(f"Trying to connect to DB at {host}/{db}")
+
     try:
         connect(host=uri)
-        # TODO: remove this debug print statement
-        print("Connection successful...")
-        return True
+        logger.info("DB connection successful...")
     except Exception as e:
-        # TODO: remove this debug print statement
-        print(f"Connection failed: {e}")
-        return False
+        logger.error(f"DB connection failed")
+        raise Exception(f"DB connection failed : {e}") from e

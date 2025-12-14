@@ -30,7 +30,7 @@ def build_budget_table_rows(budget_docs: list[object]) -> list[dict]:
             "gross_profit": doc.gross_profit
         }
     
-    # define a helper function to build a row in the table
+    # helper function to build a row in the table
     def row(label: str, field: str, row_id: str) -> dict:
         """
         Builds a row in the budget table.
@@ -57,7 +57,7 @@ def build_budget_table_rows(budget_docs: list[object]) -> list[dict]:
         }
     
 
-    # define a helper function to build a row in the table with percentages
+    # helper function to build a row in the table with percentages
     def percent_row(label: str, cost_field: str, sales_field: str, row_id: str) -> list[dict]:
         """
         Builds a row in the budget table with percentages.
