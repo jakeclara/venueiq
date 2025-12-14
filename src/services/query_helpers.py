@@ -4,6 +4,9 @@ from datetime import datetime
 from typing import Any, Dict, Optional, Type
 from xml.dom.minidom import Document
 
+from src.utils.decorators import safe_query
+
+@safe_query(fallback=0.0)
 def get_total_field(
     model: Type[Document],
     field: str, 

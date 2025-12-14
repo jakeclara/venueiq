@@ -2,8 +2,22 @@
 
 from dash import Input, Output
 
+from src.components.core.ui_helpers import make_error_card
 from src.components.home import home_page_builders
-from src.metrics import home_metrics
+from src.metrics.home import home_metrics
+from src.utils.decorators import handle_callback_errors
+
+# fallback outputs for error handling
+HOME_PAGE_ERROR_FALLBACKS = (
+    {},
+    make_error_card(),
+    make_error_card(),
+    make_error_card(),
+    make_error_card(),
+    make_error_card(),
+    make_error_card(),
+    {},
+)
 
 def get_home_callbacks(app):
     @app.callback(
@@ -18,9 +32,10 @@ def get_home_callbacks(app):
         Input("month-dropdown", "value"),
         Input("year-dropdown", "value"),
     )
+    @handle_callback_errors(fallback_outputs=HOME_PAGE_ERROR_FALLBACKS)
     def update_home_page(month, year):
         """Update all Home dashboard visual components based on selected month/year."""
-
+    
         # get all data
         data = home_metrics.get_home_page_data(month, year)
 

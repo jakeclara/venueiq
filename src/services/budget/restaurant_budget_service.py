@@ -2,8 +2,10 @@
 
 from src.models.budget import Budget
 from src.services.budget.budget_helpers import get_monthly_budget_total, get_ytd_budget_total
+from src.utils.decorators import safe_query
 
 # ------- revenue -------
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_food_revenue(month: int, year: int) -> float:
     """
     Retrieves the monthly budgeted food revenue for a given month and year.
@@ -18,6 +20,7 @@ def get_monthly_budgeted_food_revenue(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'food_sales')
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_food_revenue(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted food revenue for a given month and year.
@@ -32,6 +35,7 @@ def get_ytd_budgeted_food_revenue(month: int, year: int) -> float:
     return get_ytd_budget_total(Budget, month, year, 'food_sales')
 
 
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_bev_revenue(month: int, year: int) -> float:
     """
     Retrieves the monthly budgeted beverage revenue for a given month and year.
@@ -46,6 +50,7 @@ def get_monthly_budgeted_bev_revenue(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'bev_sales')
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_bev_revenue(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted beverage revenue for a given month and year.
@@ -60,6 +65,7 @@ def get_ytd_budgeted_bev_revenue(month: int, year: int) -> float:
     return get_ytd_budget_total(Budget, month, year, 'bev_sales')
 
 
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_restaurant_revenue(month: int, year: int) -> float:
     """
     Computes the monthly budgeted restaurant revenue for a given month and year.
@@ -74,6 +80,7 @@ def get_monthly_budgeted_restaurant_revenue(month: int, year: int) -> float:
     return get_monthly_budgeted_food_revenue(month, year) + get_monthly_budgeted_bev_revenue(month, year)
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_restaurant_revenue(month: int, year: int) -> float:
     """
     Computes the year-to-date (YTD) budgeted restaurant revenue for a given month and year.
@@ -89,6 +96,7 @@ def get_ytd_budgeted_restaurant_revenue(month: int, year: int) -> float:
 
 
 # ------- cost -------
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_food_cost(month: int, year: int) -> float:
     """
     Retrieves the monthly budgeted food cost for a given month and year.
@@ -103,6 +111,7 @@ def get_monthly_budgeted_food_cost(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'food_cost')
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_food_cost(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted food cost for a given month and year.
@@ -117,6 +126,7 @@ def get_ytd_budgeted_food_cost(month: int, year: int) -> float:
     return get_ytd_budget_total(Budget, month, year, 'food_cost')
 
 
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_bev_cost(month: int, year: int) -> float:
     """
     Retrieves the monthly budgeted beverage cost for a given month and year.
@@ -131,6 +141,7 @@ def get_monthly_budgeted_bev_cost(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'bev_cost')
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_bev_cost(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted beverage cost for a given month and year.
@@ -145,6 +156,7 @@ def get_ytd_budgeted_bev_cost(month: int, year: int) -> float:
     return get_ytd_budget_total(Budget, month, year, 'bev_cost')
 
 
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_restaurant_cost(month: int, year: int) -> float:
     """
     Computes the monthly budgeted restaurant cost for a given month and year.
@@ -159,6 +171,7 @@ def get_monthly_budgeted_restaurant_cost(month: int, year: int) -> float:
     return get_monthly_budgeted_food_cost(month, year) + get_monthly_budgeted_bev_cost(month, year)
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_restaurant_cost(month: int, year: int) -> float:
     """
     Computes the year-to-date (YTD) budgeted restaurant cost for a given month and year.
@@ -174,6 +187,7 @@ def get_ytd_budgeted_restaurant_cost(month: int, year: int) -> float:
 
 
 # ------- profit -------
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_restaurant_profit(month: int, year: int) -> float:
     """
     Computes the monthly budgeted restaurant profit for a given month and year.
@@ -188,6 +202,7 @@ def get_monthly_budgeted_restaurant_profit(month: int, year: int) -> float:
     return get_monthly_budgeted_restaurant_revenue(month, year) - get_monthly_budgeted_restaurant_cost(month, year)
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_restaurant_profit(month: int, year: int) -> float:
     """
     Computes the year-to-date (YTD) budgeted restaurant profit for a given month and year.

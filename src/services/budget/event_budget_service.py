@@ -2,8 +2,10 @@
 
 from src.models.budget import Budget
 from src.services.budget.budget_helpers import get_monthly_budget_total, get_ytd_budget_total
+from src.utils.decorators import safe_query
 
 # ------- revenue -------
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_event_revenue(month: int, year: int) -> float:
     """
     Retrieves the monthly budgeted event revenue for a given month and year.
@@ -18,6 +20,7 @@ def get_monthly_budgeted_event_revenue(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'event_sales')
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_event_revenue(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted event revenue for a given month and year.
@@ -33,6 +36,7 @@ def get_ytd_budgeted_event_revenue(month: int, year: int) -> float:
 
 
 # ------- cost -------
+@safe_query(fallback=0.0)
 def get_monthly_budgeted_event_cost(month: int, year: int) -> float:
     """
     Retrieves the monthly budgeted event cost for a given month and year.
@@ -47,6 +51,7 @@ def get_monthly_budgeted_event_cost(month: int, year: int) -> float:
     return get_monthly_budget_total(Budget, month, year, 'event_cost')
 
 
+@safe_query(fallback=0.0)
 def get_ytd_budgeted_event_cost(month: int, year: int) -> float:
     """
     Retrieves the year-to-date (YTD) budgeted event cost for a given month and year.

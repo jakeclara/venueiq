@@ -29,6 +29,11 @@ class Event(Document):
     
     meta = {
         'ordering': ['-event_date'],
-        'indexes': ['event_date', 'event_type', '-total_sales', '-total_cost'],
+        'indexes': [
+            'event_type',
+            ('event_date', 'event_type'),
+            '-total_sales',
+            '-total_cost'
+        ],
         'auto_create_index': False
     }

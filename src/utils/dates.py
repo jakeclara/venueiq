@@ -1,6 +1,10 @@
 # date-related utility functions
 
 from datetime import datetime
+import logging
+
+# create logger
+logger = logging.getLogger(__name__)
 
 def monthly_date_range(month: int, year: int) -> tuple[datetime, datetime]:
     """
@@ -55,9 +59,13 @@ def get_period_range(period: str, month: int, year: int) -> tuple[datetime, date
         tuple[datetime, datetime]: A tuple containing the start and end dates for the given period, month and year.
         Defaults to monthly if period is not "monthly" or "ytd".
     """
+    period = period.lower()
+
     if period == "monthly":
         return monthly_date_range(month, year)
     elif period == "ytd":
         return ytd_date_range(month, year)
+    
+    logger.warning(f"Invalid period: {period}. Defaulting to monthly.")
 
     return monthly_date_range(month, year)

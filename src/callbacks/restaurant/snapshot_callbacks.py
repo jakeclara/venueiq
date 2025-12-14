@@ -2,8 +2,20 @@
 
 from dash import Input, Output
 
+from src.components.core.ui_helpers import make_error_card
 from src.components.restaurant import restaurant_snapshot_builders
 from src.metrics.restaurant import restaurant_snapshot_metrics
+from src.utils.decorators import handle_callback_errors
+
+
+# fallback outputs for error handling
+RESTAURANT_SNAPSHOT_PAGE_ERROR_FALLBACKS = (
+    {},
+    make_error_card(),
+    make_error_card(),
+    make_error_card(),
+    {},
+)
 
 def get_restaurant_snapshot_callbacks(app):
     @app.callback(
@@ -15,6 +27,7 @@ def get_restaurant_snapshot_callbacks(app):
         Input("month-dropdown", "value"),
         Input("year-dropdown", "value"),
     )
+    @handle_callback_errors(fallback_outputs=RESTAURANT_SNAPSHOT_PAGE_ERROR_FALLBACKS)
     def update_restaurant_snapshot_page(month, year):
         """Update all Restaurant Snapshot dashboard visual components based on selected month/year."""
 

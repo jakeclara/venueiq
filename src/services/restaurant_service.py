@@ -4,6 +4,9 @@ from src.models.restaurant_sale import RestaurantSale
 from src.services.query_helpers import get_total_field
 from datetime import datetime
 
+from src.utils.decorators import safe_query
+
+@safe_query(fallback=0.0)
 def get_total_restaurant_sales(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total restaurant sales within a given date range.
@@ -19,6 +22,7 @@ def get_total_restaurant_sales(start_date: datetime, end_date: datetime) -> floa
     return get_total_field(RestaurantSale, 'total_sales', start_date, end_date, 'sales_date')
 
 
+@safe_query(fallback=0.0)
 def get_total_restaurant_costs(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total restaurant costs within a given date range.
@@ -33,6 +37,7 @@ def get_total_restaurant_costs(start_date: datetime, end_date: datetime) -> floa
     return get_total_field(RestaurantSale, 'total_cost', start_date, end_date, 'sales_date')
 
 
+@safe_query(fallback=[])
 def get_top_selling_menu_items(start_date: datetime, end_date: datetime, limit: int = 1) -> list[dict]:
     """
     Computes the top selling menu items within a given date range
@@ -86,6 +91,7 @@ def get_top_selling_menu_items(start_date: datetime, end_date: datetime, limit: 
     return list(result)
 
 
+@safe_query(fallback=[])
 def get_restaurant_sales_by_category(start_date: datetime, end_date: datetime) -> list[dict]:
     """
     Retrieves the total restaurant sales grouped by category within a given date range.
@@ -117,6 +123,7 @@ def get_restaurant_sales_by_category(start_date: datetime, end_date: datetime) -
     return list(result)
 
 
+@safe_query(fallback=[])
 def get_restaurant_cost_by_category(start_date: datetime, end_date: datetime) -> list[dict]:
     """
     Retrieves the total restaurant cost grouped by category within a given date range.
@@ -148,6 +155,7 @@ def get_restaurant_cost_by_category(start_date: datetime, end_date: datetime) ->
     return list(result)
 
 
+@safe_query(fallback=0.0)
 def get_restaurant_gross_profit(start_date: datetime, end_date: datetime) -> float:
     """
     Retrieves the total gross profit for restaurant sales within a given date range.
@@ -165,6 +173,7 @@ def get_restaurant_gross_profit(start_date: datetime, end_date: datetime) -> flo
     return gross_profit
 
 
+@safe_query(fallback=[])
 def get_hot_or_cold_menu_items(
     current_start: datetime, 
     current_end: datetime, 
@@ -321,6 +330,7 @@ def get_hot_or_cold_menu_items(
     return list(result)
 
 
+@safe_query(fallback=[])
 def get_average_sales_by_day(start_date: datetime, end_date: datetime) -> list[dict]:
     """
     Retrieves the average total sales per day of the week within a given date range.

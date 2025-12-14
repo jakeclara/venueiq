@@ -2,8 +2,21 @@
 
 from dash import Input, Output
 
-from src.components.events import events_page_builders
-from src.metrics import event_metrics
+from src.components.core.ui_helpers import make_error_card
+from src.components.events import event_page_builders
+from src.metrics.events import event_metrics
+from src.utils.decorators import handle_callback_errors
+
+# fallback outputs for error handling
+EVENT_PAGE_ERROR_FALLBACKS = (
+    make_error_card(),
+    {},
+    make_error_card(),
+    make_error_card(),
+    make_error_card(),
+    make_error_card(),
+    {},
+)
 
 def get_event_callbacks(app):
     @app.callback(
@@ -17,6 +30,7 @@ def get_event_callbacks(app):
         Input("month-dropdown", "value"),
         Input("year-dropdown", "value"),
     )
+    @handle_callback_errors(fallback_outputs=EVENT_PAGE_ERROR_FALLBACKS)
     def update_event_page(month, year):
         """Update all Event dashboard visual components based on selected month/year."""
 
@@ -24,35 +38,35 @@ def get_event_callbacks(app):
         data = event_metrics.get_events_page_data(month, year)
 
         # build visualizations
-        event_monthly_summary_card = events_page_builders.build_events_monthly_summary_card(
+        event_monthly_summary_card = event_page_builders.build_events_monthly_summary_card(
             data["monthly_revenue_metrics"],
             data["py_monthly_revenue_metrics"]
         )
 
-        events_ytd_bar_chart = events_page_builders.build_events_ytd_bar_chart(
+        events_ytd_bar_chart = event_page_builders.build_events_ytd_bar_chart(
             data["ytd_summary_metrics"]
         )
 
-        num_events_card = events_page_builders.build_num_events_card(
+        num_events_card = event_page_builders.build_num_events_card(
             data["num_events_monthly"],
             data["num_events_ytd"]
         )
 
-        num_high_value_events_card = events_page_builders.build_num_high_value_events_card(
+        num_high_value_events_card = event_page_builders.build_num_high_value_events_card(
             data["num_high_value_events_monthly"],
             data["num_high_value_events_ytd"]
         )
 
-        avg_event_sales_card = events_page_builders.build_avg_event_sales_card(
+        avg_event_sales_card = event_page_builders.build_avg_event_sales_card(
             data["avg_event_sales_monthly"],
             data["avg_event_sales_ytd"]
         )
 
-        top_five_events_monthly_card = events_page_builders.build_top_five_monthly_events_card(
+        top_five_events_monthly_card = event_page_builders.build_top_five_monthly_events_card(
             data["top_five_events_monthly"]
         )
 
-        event_type_pie_chart = events_page_builders.build_event_type_pie_chart(
+        event_type_pie_chart = event_page_builders.build_event_type_pie_chart(
             data["events_by_type_df"]
         )
 

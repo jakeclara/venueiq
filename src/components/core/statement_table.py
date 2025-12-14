@@ -3,8 +3,6 @@
 from dash import dash_table
 from dash.dash_table.Format import Format, Group, Scheme
 
-
-from src.metrics.metrics_helpers import compute_percentage, format_metric
 from src.utils.constants import STATEMENT_SECTION_HEADERS, STATEMENT_TABLE_COLORS
 
 # table columns
