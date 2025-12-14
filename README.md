@@ -52,6 +52,71 @@ src/
 └── utils/
 ```
 
+## <br>Setup & Installation:
+### Prerequisites ###
+Ensure you have the following installed:
+- Python 3.8+: Download from [Python.org](https://www.python.org/)
+    <br>- Ensure that **"Add Python to PATH"** is checked during installation.
+- Git: Download from [git-scm.com](https://git-scm.com/install/)
+
+### Get the Code ###
+Clone the repository from GitHub and navigate into the project directory:
+  ```sh
+  git clone https://github.com/jakeclara/venueiq.git
+  cd venueiq
+  ```
+
+### Environment Setup ###
+Use a virtual environment to manage dependencies:
+```sh
+# Create a virtual environment
+python3 -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate  # On Windows, use: .\venv\Scripts\activate
+```
+Install the required libraries:
+```sh
+pip install -r requirements.txt
+```
+
+### Database Configuration and Seeding ###
+VenueIQ requires a MongoDB connection string and seeded data to function.
+
+1. **Obtain URI:** Create a database on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and retrieve your connection string (URI).
+
+2. **Create .env file:** Create a new file named ```.env``` in the root of the project directory.
+
+3. **Add Configuration:** Paste your connection string information into the file:
+```sh
+# Environment variables used for DB connection
+MONGO_USER=your_mongo_user
+MONGO_PASSWORD=your_mongo_password
+MONGO_HOST=your_mongo_host
+MONGO_DB=your_mongo_db
+```
+- **Note on Permission:**
+
+4. **Seed Sample Data:** Run the data seeding script to populate the database with the required data:
+```sh
+python src/seeds/run_seeds.py
+```
+
+2. Create a virtual environment (recommended):
+   - Command:  
+     ```sh
+     python -m venv venv
+     ```
+   - Activate the virtual environment:
+     - **Windows**:  
+       ```sh
+       venv\Scripts\activate
+       ```
+     - **macOS/Linux**:  
+       ```sh
+       source venv/bin/activate
+       ```
+
 ## <br>Architecture & Design
 
 - Refactored from a monolithic structure into a **scalable, modular architecture** with clear separation between models, services, metrics, callbacks, and layouts
