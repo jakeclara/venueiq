@@ -72,7 +72,8 @@ layout = html.Div([
         dbc.Col([
             cards.make_chart_card(
                 "Revenue Breakdown",
-                revenue_breakdown_pie_chart
+                revenue_breakdown_pie_chart,
+                "YTD"
             )
         ], xs=12, lg=4, className="mb-4"),
     ]),
