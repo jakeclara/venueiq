@@ -3,8 +3,9 @@
 A full-stack Dash application for hospitality analytics that transforms operational and financial data into actionable insights through interactive dashboards.
 
 
-**Live Demo:**  
+**Live Demo:**  [View on Render](https://venueiq.onrender.com/)  
 *The demo uses seeded sample data to simulate real-world operations.*  
+*Initial load may be delayed due to Render cold starts.*  
 
 ![Home Dashboard](screenshots/home-dashboard.png)
 
