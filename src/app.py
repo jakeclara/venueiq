@@ -1,7 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html
-from flask import Flask
 from dotenv import load_dotenv
 import logging
 import sys
@@ -14,16 +13,22 @@ from src.utils.log_config import setup_logging
 # create logger
 logger = logging.getLogger(__name__)
 
+# set up logging
+setup_logging()
+
 # load environment variables from .env file
 load_dotenv()
 
-# explicit Flask server
-server = Flask(__name__)
+# initialize the database
+try:
+    init_db()
+except Exception as e:
+    logger.critical(f"Database initialization failed: Program must exit")
+    raise
 
 # initialize the app
 app = Dash(
     __name__,
-    server=server,
     # use Dash pages
     use_pages=True,
     # use BS Flatly theme and icons
@@ -54,15 +59,4 @@ server = app.server
 
 # run the app
 if __name__ == '__main__':
-    
-    # set up logging
-    setup_logging()
-
-    # initialize the database
-    try:
-        init_db()
-    except Exception as e:
-        logger.critical(f"Database initialization failed: Program must exit")
-        sys.exit(1)
-
-    app.run(debug=True)
+    app.run(debug=False)
