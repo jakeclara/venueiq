@@ -43,6 +43,7 @@ def serve_layout():
             navbar,
             dcc.Loading(
                 type="default",
+                className="viewport-loader",
                 children=dbc.Container(dash.page_container, className="mt-4"),
             ),
             footer
