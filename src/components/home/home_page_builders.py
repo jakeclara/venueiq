@@ -256,7 +256,7 @@ def build_top_event_card(top_selling_event: dict, py_top_selling_event: dict) ->
     top_event_card = cards.make_one_metric_card(
         title="Top Selling Event",
         metric=top_event_card_metrics,
-        footer="vs. Top Selling Event Prior Year",
+        footer="YTD vs. Top Selling Event Prior Year",
         symbol="$",
     )
 

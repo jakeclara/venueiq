@@ -1,9 +1,8 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import Dash, html
+from dash import Dash, dcc, html
 from dotenv import load_dotenv
 import logging
-import sys
 
 from src.callbacks.register_callbacks import register_all_callbacks
 from src.partials import navbar, footer
@@ -42,7 +41,10 @@ def serve_layout():
     return html.Div(
         [
             navbar,
-            dbc.Container(dash.page_container, className="mt-4"),
+            dcc.Loading(
+                type="default",
+                children=dbc.Container(dash.page_container, className="mt-4"),
+            ),
             footer
         ],
         className="d-flex flex-column min-vh-100"
